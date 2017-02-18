@@ -72,7 +72,7 @@ public class Main {
 		thConfig.dt = .01;
 		thConfig.max_acc = 9.0;
 		thConfig.max_jerk = 70.0;
-		thConfig.max_vel = 3.0;
+		thConfig.max_vel = 4.0;
 		thConfig.wheelbase_width_feet = 33/12.0;
 		thConfig.wheel_dia_inches = 4;
 		thConfig.scale_factor = 0.5;
