@@ -11,13 +11,11 @@ import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
 import com.team319.ui.PathViewer;
 
-import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.WaypointSequence.Waypoint;
 import com.team254.lib.trajectory.io.IPathSerializer;
 
 public class BobPathGenerator extends PathGenerator {
 
-	public static Path makePath(BobPath bobPath) {
+	private static Path makePath(BobPath bobPath) {
 		Path p = PathGenerator.makePath(bobPath.getWaypointSequence(), bobPath.getConfig(), bobPath.getConfig().wheelbase_width_feet,
 				bobPath.getConfig().name);
 
@@ -38,6 +36,18 @@ public class BobPathGenerator extends PathGenerator {
 		return new Path(p.getName(), new Pair(oldRight, oldLeft));
 	}
 	
+	private static Path appendPaths(String pathName, BobPath[] bobPaths) {
+		Path tmp = makePath(bobPaths[0]);
+		Path appendedPaths = new Path(pathName, tmp.getPair());
+		
+		for (int i = 1; i < bobPaths.length; i++) {
+			tmp = makePath(bobPaths[i]);
+			appendedPaths.getLeftWheelTrajectory().append(tmp.getLeftWheelTrajectory());
+			appendedPaths.getRightWheelTrajectory().append(tmp.getRightWheelTrajectory());
+		}
+		return appendedPaths;
+	}
+	
 	
 	/**
 	 * Appends paths and exports them using the first BobPath's config. Direction for each BobPath is conserved.
@@ -48,14 +58,7 @@ public class BobPathGenerator extends PathGenerator {
 	public static void appendAndExportPaths(String relativeDirectoryName, String newPathName, BobPath...bobPaths){
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
 		
-		Path tmp = makePath(bobPaths[0]);
-		Path exportPath = new Path(newPathName, tmp.getPair());
-		
-		for (int i = 1; i < bobPaths.length; i++) {
-			tmp = makePath(bobPaths[i]);
-			exportPath.getLeftWheelTrajectory().append(tmp.getLeftWheelTrajectory());
-			exportPath.getRightWheelTrajectory().append(tmp.getRightWheelTrajectory());
-		}
+		Path exportPath = appendPaths(newPathName, bobPaths);
 		
 		SrxTranslator srxt = new SrxTranslator();
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(exportPath, bobPaths[0].getConfig());
@@ -86,20 +89,39 @@ public class BobPathGenerator extends PathGenerator {
 			PathViewer.showPath(chezyPath);
 		}
 	}
-
-	public static void exportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, BobPath bobPath) {
-
-		Path chezyPath = makePath(bobPath);
-
-		String pathName = relativeDirectoryName + "/" + chezyPath.getName();
-		String data = serializer.serialize(chezyPath);
+	
+	private static void serializePath(IPathSerializer serializer, String relativeDirectoryName, Path path) {
+		String pathName = relativeDirectoryName + "/" + path.getName();
+		String data = serializer.serialize(path);
 		try {
 			Files.write(Paths.get(pathName), data.getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(path);
 		} catch (IOException e) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
 		}
+	}
+
+	/**
+	 * Export the path to a file using the provided serializer
+	 * @param serializer the serializer to format the data
+	 * @param relativeDirectoryName the location to save the path files
+	 * @param bobPath the path to save
+	 */
+	public static void exportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, BobPath bobPath) {
+		Path path = makePath(bobPath);
+		serializePath(serializer, relativeDirectoryName, path);
+	}
+	/**
+	 * Append the paths together and export the paths to a file using the provided serializer
+	 * @param serializer the serializer to format the data
+	 * @param relativeDirectoryName the location to save the path files
+	 * @param newPathName the name of the path file
+	 * @param bobPaths the array of paths to be appended together
+	 */
+	public static void appendAndExportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, String newPathName, BobPath... bobPaths) {
+		Path path = appendPaths(newPathName, bobPaths);
+		serializePath(serializer, relativeDirectoryName, path);
 	}
 }

@@ -41,23 +41,7 @@ public class Main {
 		toAppend.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));
 		toAppend.addWaypoint(new WaypointSequence.Waypoint(-4, 3, Math.toRadians(80)));	
 		
-		
-		
-		SrxTranslatorConfig thConfig = new SrxTranslatorConfig();
-		thConfig.name = "TripleHelixConfig";
-		thConfig.dt = .01;
-		thConfig.max_acc = 10.0;
-		thConfig.max_jerk = 60.0;
-		thConfig.max_vel = 5.0;
-		thConfig.wheelbase_width_feet = 27/12.0;
-		thConfig.wheel_dia_inches = 3.5;
-		thConfig.scale_factor = .743;
-		
-		BobPath redGear = new BobPath(thConfig,"RedGear",1);
-		redGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		redGear.addWaypoint(new WaypointSequence.Waypoint(7.4, 2, Math.toRadians(60)));
-
-		// Description of this auto mode path.
+				// Description of this auto mode path.
 		//WaypointSequence p = new WaypointSequence(10);
 		//p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
 		//p.addWaypoint(new WaypointSequence.Waypoint(5.5, .625, Math.toRadians(35.0)));//BHApt1
@@ -78,6 +62,53 @@ public class Main {
 		BobPathGenerator.exportPath("Paths", blueHopperAutoPt1);
 		BobPathGenerator.exportPath("Paths", blueHopperAutoPt2);
 		BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", blueHopperAutoPt2, toAppend);
-		//redGear.exportPathWithSerializer(new VelocityOnlyFileSerializer(), "Paths");
+		
+		generateTHPaths();
+	}
+	
+	private static void generateTHPaths() {
+		SrxTranslatorConfig thConfig = new SrxTranslatorConfig();
+		thConfig.name = "TripleHelixConfig";
+		thConfig.dt = .02;
+		thConfig.max_acc = 9.0;
+		thConfig.max_jerk = 70.0;
+		thConfig.max_vel = 5.0;
+		thConfig.wheelbase_width_feet = 27/12.0;
+		thConfig.wheel_dia_inches = 4;
+		thConfig.scale_factor = 1;
+		
+		BobPath redGear = new BobPath(thConfig, "RedGear", 1);
+		redGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		redGear.addWaypoint(new WaypointSequence.Waypoint(7.4, 2, Math.toRadians(60)));
+		
+		BobPath redGearToHopper = new BobPath(thConfig, "RedGearToHopper", -1);
+		redGearToHopper.addWaypoint(new WaypointSequence.Waypoint(7.4, 2, Math.toRadians(60)));
+		redGearToHopper.addWaypoint(new WaypointSequence.Waypoint(6.8, -6.1, Math.toRadians(90)));
+		
+		BobPath redGearToHopper2 = new BobPath(thConfig, "RedGearToHopper2", -1);
+		redGearToHopper2.addWaypoint(new WaypointSequence.Waypoint(7.4, 2, Math.toRadians(60)));
+		redGearToHopper2.addWaypoint(new WaypointSequence.Waypoint(4, -3, Math.toRadians(91)));
+		redGearToHopper2.addWaypoint(new WaypointSequence.Waypoint(6.8, -6.1, Math.toRadians(180)));
+		
+		BobPath redHopper = new BobPath(thConfig, "RedHopper", 1);
+		redHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		redHopper.addWaypoint(new WaypointSequence.Waypoint(6.5, -3.02, 0));
+		
+		BobPath testDrive = new BobPath(thConfig, "TestDrive", 1);
+		testDrive.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		testDrive.addWaypoint(new WaypointSequence.Waypoint(5, 0, 0));
+		
+		BobPath redHopper2 = new BobPath(thConfig, "RedHopper2", 1);
+		redHopper2.addWaypoint(new WaypointSequence.Waypoint(1, 0, -45));
+		redHopper2.addWaypoint(new WaypointSequence.Waypoint(6.5, -3.02, 0));
+		
+		BobPathGenerator.appendAndExportPathWithSerializer(
+				new VelocityOnlyFileSerializer() , "Paths", "RedGearAndHopper", redGear, redGearToHopper);
+		BobPathGenerator.appendAndExportPathWithSerializer(
+				new VelocityOnlyFileSerializer() , "Paths", "RedGearAndHopper2", redGear, redGearToHopper2);
+		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", redGear);
+		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", redHopper);
+		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", redHopper2);
+		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", testDrive);
 	}
 }
