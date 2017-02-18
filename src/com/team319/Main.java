@@ -69,13 +69,13 @@ public class Main {
 	private static void generateTHPaths() {
 		SrxTranslatorConfig thConfig = new SrxTranslatorConfig();
 		thConfig.name = "TripleHelixConfig";
-		thConfig.dt = .02;
+		thConfig.dt = .01;
 		thConfig.max_acc = 9.0;
 		thConfig.max_jerk = 70.0;
-		thConfig.max_vel = 5.0;
-		thConfig.wheelbase_width_feet = 27/12.0;
+		thConfig.max_vel = 3.0;
+		thConfig.wheelbase_width_feet = 33/12.0;
 		thConfig.wheel_dia_inches = 4;
-		thConfig.scale_factor = 1;
+		thConfig.scale_factor = 0.5;
 		
 		BobPath redGear = new BobPath(thConfig, "RedGear", 1);
 		redGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
@@ -92,11 +92,11 @@ public class Main {
 		
 		BobPath redHopper = new BobPath(thConfig, "RedHopper", 1);
 		redHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		redHopper.addWaypoint(new WaypointSequence.Waypoint(6.5, -3.02, 0));
+		redHopper.addWaypoint(new WaypointSequence.Waypoint(78.5 / 12, -36.25/12, 0));
 		
 		BobPath testDrive = new BobPath(thConfig, "TestDrive", 1);
 		testDrive.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		testDrive.addWaypoint(new WaypointSequence.Waypoint(5, 0, 0));
+		testDrive.addWaypoint(new WaypointSequence.Waypoint(3, -3, Math.toRadians(89)));
 		
 		BobPath redHopper2 = new BobPath(thConfig, "RedHopper2", 1);
 		redHopper2.addWaypoint(new WaypointSequence.Waypoint(1, 0, -45));
