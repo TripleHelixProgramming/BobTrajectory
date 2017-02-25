@@ -72,7 +72,7 @@ public class Main {
 		thConfig.dt = .01;
 		thConfig.max_acc = 9.0;
 		thConfig.max_jerk = 70.0;
-		thConfig.max_vel = 4.0;
+		thConfig.max_vel = 5.0;
 		thConfig.wheelbase_width_feet = 33/12.0;
 		thConfig.wheel_dia_inches = 4;
 		thConfig.scale_factor = 0.5;
@@ -86,56 +86,73 @@ public class Main {
 		centerGear.addWaypoint(new WaypointSequence.Waypoint((110.0 - robot_length)/12, 0, 0));
 		
 		//  Distance in feet.
-		double forward = (78.5 - robot_length)/12;         
-		double left_right = (71.76 - (robot_width/2))/12;
+		double forward = (130 - robot_length)/12;         
+		double left_right = (92 - (robot_width/2))/12;
 		
 		//  Robot Facing Forward
 		BobPath blueBoilerGear = new BobPath(thConfig, "BlueBoilerGear", 1);
 		blueBoilerGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		blueBoilerGear.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(-60)));	
+		blueBoilerGear.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(-60)));	
 	
 		BobPath redLoaderGear = new BobPath(thConfig, "RedLoaderGear", 1);
 		redLoaderGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		redLoaderGear.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(-60)));	
+		redLoaderGear.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(-60)));	
 		
 		BobPath blueLoaderGear = new BobPath(thConfig, "BlueLoaderGear", 1);
 		blueLoaderGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		blueLoaderGear.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(60)));	
+		blueLoaderGear.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(60)));	
 
 		BobPath redBoilerGear = new BobPath(thConfig, "RedBoilerGear", 1);
 		redBoilerGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		redBoilerGear.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(60)));	
+		redBoilerGear.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(60)));	
 		
 
 		//  Robot faces Backwards in Wall to Hopper paths. 
 		//  Richmond measurements to hopper were: forward - 5.98  right - 3.21
 		BobPath redBoilerHopper = new BobPath(thConfig, "RedBoilerHopper", -1);
-		redBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, 180));
-		redBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, 3.21, Math.toRadians(180)));
+		redBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, Math.toRadians(180)));
+		redBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, -3.21, Math.toRadians(180)));
 		
 		BobPath blueBoilerHopper = new BobPath(thConfig, "BlueBoilerHopper", -1);
-		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, 180));
-		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, -3.21, Math.toRadians(180)));		
+		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, Math.toRadians(180)));
+		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, 3.21, Math.toRadians(180)));	
+		
+		BobPath redKeyGear = new BobPath(thConfig, "RedKeyGear", 1);
+		redKeyGear.addWaypoint(new WaypointSequence.Waypoint(0, ((73 - robot_width)  / 12), 0));
+		redKeyGear.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(60)));	
 		
 		BobPath redGearHopper = new BobPath(thConfig, "RedGearHopper", -1);
-		redGearHopper.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(60)));
-		redGearHopper.addWaypoint(new WaypointSequence.Waypoint(4, 3, Math.toRadians(91)));
-		redGearHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, -3.21, Math.toRadians(180)));
-		
+		redGearHopper.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(60)));
+		redGearHopper.addWaypoint(new WaypointSequence.Waypoint(5, 1, Math.toRadians(91)));
+		redGearHopper.addWaypoint(new WaypointSequence.Waypoint(5.98 + (robot_length / 12), -3.21, Math.toRadians(180)));
+
+		BobPath blueKeyGear = new BobPath(thConfig, "BlueKeyGear", 1);
+		blueKeyGear.addWaypoint(new WaypointSequence.Waypoint(0, ((-73 + robot_width)  / 12), 0));
+		blueKeyGear.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(-60)));	
+//			
 		BobPath blueGearHopper = new BobPath(thConfig, "BlueGearHopper", -1);
-		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(60)));
-		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(4, -3, Math.toRadians(91)));
-		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, -3.21, Math.toRadians(180)));
+		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(-60)));
+		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(5, -1, Math.toRadians(-91)));
+		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(5.98 + (robot_length / 12), 3.21, Math.toRadians(180)));
+		
+//		BobPath blueGearHopper = new BobPath(thConfig, "BlueGearHopper", -1);
+//		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(forward, -left_right, Math.toRadians(-60)));
+////		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(5, -1, Math.toRadians(-91)));
+//		blueGearHopper.addWaypoint(new WaypointSequence.Waypoint(5.98 + (robot_length / 12), 3.21, Math.toRadians(-100)));
 		
 //		BobPath testDrive = new BobPath(thConfig, "TestDrive", 1);
 //		testDrive.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
 //		testDrive.addWaypoint(new WaypointSequence.Waypoint(3, -3, Math.toRadians(89)));
 		
-		BobPathGenerator.appendAndExportPathWithSerializer(
-				new VelocityOnlyFileSerializer() , "Paths", "RedBoilerGearHopper", redBoilerGear, redGearHopper);
+		BobPath reverseGear = new BobPath(thConfig, "ReverseGear", -1);
+		reverseGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		reverseGear.addWaypoint(new WaypointSequence.Waypoint(-2, 0, 0));
 		
 		BobPathGenerator.appendAndExportPathWithSerializer(
-				new VelocityOnlyFileSerializer() , "Paths", "BlueBoilerGearHopper", blueBoilerGear, blueGearHopper);
+				new VelocityOnlyFileSerializer() , "Paths", "RedKeyGearHopper", redKeyGear, redGearHopper);
+		
+		BobPathGenerator.appendAndExportPathWithSerializer(
+				new VelocityOnlyFileSerializer() , "Paths", "BlueKeyGearHopper", blueKeyGear, blueGearHopper);
 		
 		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", centerGear);
 		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", blueBoilerGear);
@@ -144,6 +161,7 @@ public class Main {
 		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", redLoaderGear);
 		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", redBoilerHopper);
 		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", blueBoilerHopper);
+		BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", reverseGear);
 		
 		//BobPathGenerator.exportPathWithSerializer(new VelocityOnlyFileSerializer() , "Paths", testDrive);
 	}
