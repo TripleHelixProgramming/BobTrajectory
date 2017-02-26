@@ -77,7 +77,7 @@ public class Main {
 		thConfig.wheel_dia_inches = 4;
 		thConfig.scale_factor = 1.5;
 		
-		double robot_length = 33.5;    	// Max length 40 inches
+		double robot_length = 33.5;    	//   Max length 40 inches
 		double robot_width = 36.0;		// Max width 36 inches
 		
 		// Center wall to Center Gear Lift (Robot Facing Forwards)
