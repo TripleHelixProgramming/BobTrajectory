@@ -108,15 +108,16 @@ public class Main {
 		
 
 		//  Robot faces Backwards in Wall to Hopper paths. 
-		//  Richmond measurements to hopper were: forward - 5.98  right - 3.21
+		//  Richmond measurements to hopper were: forward: 5.98  right: 3.21
 		BobPath redBoilerHopper = new BobPath(thConfig, "RedBoilerHopper", -1);
 		redBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, Math.toRadians(180)));
 		redBoilerHopper.addWaypoint(new WaypointSequence.Waypoint((74.75 / 12), (-39.52 / 12), Math.toRadians(180)));
 		
 		BobPath blueBoilerHopper = new BobPath(thConfig, "BlueBoilerHopper", -1);
 		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(0, 0, Math.toRadians(180)));
-		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint(5.98, 3.21, Math.toRadians(180)));	
+		blueBoilerHopper.addWaypoint(new WaypointSequence.Waypoint((74.75 / 12), (39.52 / 12), Math.toRadians(180)));	
 		
+		// Pie in the Sky  Gear And Hopper
 		BobPath redKeyGear = new BobPath(thConfig, "RedKeyGear", 1);
 		redKeyGear.addWaypoint(new WaypointSequence.Waypoint(0, ((73 - robot_width)  / 12), 0));
 		redKeyGear.addWaypoint(new WaypointSequence.Waypoint(forward, left_right, Math.toRadians(60)));	
