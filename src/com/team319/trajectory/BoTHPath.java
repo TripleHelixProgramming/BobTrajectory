@@ -3,6 +3,7 @@ package com.team319.trajectory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.team254.lib.trajectory.TrajectoryGenerator.Strategy;
 import com.team254.lib.trajectory.Waypoint;
 
 public class BoTHPath {
@@ -11,6 +12,7 @@ public class BoTHPath {
 	private double targetVelocity = 48;
 	private List<Waypoint> waypoints = new ArrayList<>();
 	private boolean isReversed;
+	private Strategy strategy = Strategy.AUTOMATIC;
 	
 	public void setWaypoints(List<Waypoint> waypoints){
 		this.waypoints = waypoints;
@@ -51,5 +53,13 @@ public class BoTHPath {
 
 	public void setTargetVelocity(double targetVelocity) {
 		this.targetVelocity = targetVelocity;
+	}
+
+	public Strategy getStrategy() {
+		return strategy;
+	}
+
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
 	}
 }

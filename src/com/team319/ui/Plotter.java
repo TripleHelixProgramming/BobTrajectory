@@ -56,7 +56,8 @@ public class Plotter {
 		Series<Number, Number> right = new Series<>();
 		right.setName("Right");
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			right.getData().add(new Data<Number, Number>(path.getPair().right.getSegment(i).y, path.getPair().right.getSegment(i).x));
+			Data<Number, Number> data = new Data<Number, Number>(path.getPair().right.getSegment(i).y, path.getPair().right.getSegment(i).x);
+			right.getData().add(data);
 		}
 		
 		sc.getData().addAll(left, right);

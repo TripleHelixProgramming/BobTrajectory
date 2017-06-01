@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import com.team254.lib.trajectory.TrajectoryGenerator.Config;
+import com.team254.lib.trajectory.TrajectoryGenerator.Strategy;
 import com.team254.lib.trajectory.Waypoint;
 import com.team319.trajectory.BoTHPath;
 import com.team319.trajectory.BoTHPathGenerator;
@@ -25,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -98,7 +100,8 @@ public class BoTHPlanner extends Application {
 			public void handle(ActionEvent event) {
 				root.setBottom(getPathEditor(null));
 				pathList.getSelectionModel().clearSelection();
-				waypointList.getSelectionModel().clearSelection();
+				waypointList.getItems().clear();
+				waypointList.refresh();
 				plotter.clearChart();
 			}
 		});
@@ -162,6 +165,20 @@ public class BoTHPlanner extends Application {
 			direction.setSelected(false);
 		}
 		
+		
+		ObservableList<Strategy> options = FXCollections.observableArrayList(
+				Strategy.AUTOMATIC,
+				Strategy.S_CURVE,
+				Strategy.TRAPEZOIDAL,
+				Strategy.STEP
+				);
+		ComboBox<Strategy> strategy = new ComboBox<>(options);
+		if (path != null) {
+			strategy.getSelectionModel().select(path.getStrategy());
+		} else {
+			strategy.getSelectionModel().selectFirst();
+		}
+
 		Button save = new Button("Save");
 		save.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -171,14 +188,17 @@ public class BoTHPlanner extends Application {
 					newPath.setTargetVelocity(Double.valueOf(pathVelocity.getText()));
 					newPath.setReversed(direction.isSelected());
 					newPath.setName(pathName.getText());
+					newPath.setStrategy(strategy.getValue());
 					paths.add(newPath);
 					pathList.getSelectionModel().select(newPath);
 				} else {
 					path.setName(pathName.getText());
 					path.setTargetVelocity(Double.valueOf(pathVelocity.getText()));
 					path.setReversed(direction.isSelected());
+					path.setStrategy(strategy.getValue());
 					pathList.refresh();
 				}
+				plotter.plotPath(config, pathList.getSelectionModel().getSelectedItem());
 			}
 		});
 
@@ -190,7 +210,7 @@ public class BoTHPlanner extends Application {
 		FlowPane.setMargin(direction, new Insets(5));
 		FlowPane.setMargin(save, new Insets(5));
 		editor.setPadding(new Insets(5));
-		editor.getChildren().addAll(pathNameLabel, pathName, pathVelocityLabel, pathVelocity, direction, save);
+		editor.getChildren().addAll(pathNameLabel, pathName, pathVelocityLabel, pathVelocity, direction, strategy, save);
 		return editor;
 	}
 
