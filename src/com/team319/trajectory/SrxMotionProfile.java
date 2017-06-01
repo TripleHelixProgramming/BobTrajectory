@@ -46,6 +46,7 @@ public class SrxMotionProfile {
 		return this.toJson().toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject toJson() {
 		JSONObject obj = new JSONObject();
 		obj.put("numPoints", numPoints);

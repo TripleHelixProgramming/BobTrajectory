@@ -9,17 +9,15 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
-import com.team319.ui.PathViewer;
-
+import com.team254.lib.trajectory.TrajectoryGenerator.Config;
 import com.team254.lib.trajectory.io.IPathSerializer;
 
-public class BobPathGenerator extends PathGenerator {
+public class BoTHPathGenerator extends PathGenerator {
 
-	private static Path makePath(BobPath bobPath) {
-		Path p = PathGenerator.makePath(bobPath.getWaypointSequence(), bobPath.getConfig(), bobPath.getConfig().wheelbase_width_feet,
-				bobPath.getConfig().name);
+	public static Path makePath(Config config, BoTHPath bobPath) {
+		Path p = PathGenerator.makePath(bobPath, config);
 
-		if (bobPath.getConfig().direction == -1) {
+		if (bobPath.isReversed()) {
 			p = reversePath(p);
 		}
 		
@@ -36,12 +34,12 @@ public class BobPathGenerator extends PathGenerator {
 		return new Path(p.getName(), new Pair(oldRight, oldLeft));
 	}
 	
-	private static Path appendPaths(String pathName, BobPath[] bobPaths) {
-		Path tmp = makePath(bobPaths[0]);
+	private static Path appendPaths(String pathName, Config config, BoTHPath[] bobPaths) {
+		Path tmp = makePath(bobPaths[0], config);
 		Path appendedPaths = new Path(pathName, tmp.getPair());
 		
 		for (int i = 1; i < bobPaths.length; i++) {
-			tmp = makePath(bobPaths[i]);
+			tmp = makePath(bobPaths[i], config);
 			appendedPaths.getLeftWheelTrajectory().append(tmp.getLeftWheelTrajectory());
 			appendedPaths.getRightWheelTrajectory().append(tmp.getRightWheelTrajectory());
 		}
@@ -55,38 +53,28 @@ public class BobPathGenerator extends PathGenerator {
 	 * @param newPathName the name of the new generated path
 	 * @param bobPaths the BobPaths to append and export
 	 */
-	public static void appendAndExportPaths(String relativeDirectoryName, String newPathName, BobPath...bobPaths){
-		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
+	public static void appendAndExportPaths(String relativeDirectoryName, String newPathName, Config config, BoTHPath...bobPaths){
 		
-		Path exportPath = appendPaths(newPathName, bobPaths);
+		Path exportPath = appendPaths(newPathName, config, bobPaths);
 		
 		SrxTranslator srxt = new SrxTranslator();
-		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(exportPath, bobPaths[0].getConfig());
+		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(exportPath, config);
 
-		if (!exporter.exportSrxTrajectory(combined, newPathName, bobPaths)) {
+		if (!SrxTrajectoryExporter.exportSrxTrajectory(combined, newPathName, bobPaths)) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
-		} else {
-			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(exportPath);
-		}		
-		
+		}	
 	}
 
-	public static void exportPath(String relativeDirectoryName, BobPath bobPath) {
-		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
-
-		Path chezyPath = makePath(bobPath);
+	public static void exportPath(String relativeDirectoryName, Config config, BoTHPath bobPath) {
+		Path chezyPath = makePath(bobPath, config);
 
 		SrxTranslator srxt = new SrxTranslator();
-		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, bobPath.getConfig());
+		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, config);
 
-		if (!exporter.exportSrxTrajectory(combined, bobPath.getConfig(), bobPath.getWaypointSequence())) {
+		if (!SrxTrajectoryExporter.exportSrxTrajectory(combined, bobPath)) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
-		} else {
-			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
 		}
 	}
 	
@@ -96,7 +84,6 @@ public class BobPathGenerator extends PathGenerator {
 		try {
 			Files.write(Paths.get(pathName), data.getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
-			PathViewer.showPath(path);
 		} catch (IOException e) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
@@ -109,8 +96,8 @@ public class BobPathGenerator extends PathGenerator {
 	 * @param relativeDirectoryName the location to save the path files
 	 * @param bobPath the path to save
 	 */
-	public static void exportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, BobPath bobPath) {
-		Path path = makePath(bobPath);
+	public static void exportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, Config config, BoTHPath bobPath) {
+		Path path = makePath(config, bobPath);
 		serializePath(serializer, relativeDirectoryName, path);
 	}
 	/**
@@ -120,8 +107,8 @@ public class BobPathGenerator extends PathGenerator {
 	 * @param newPathName the name of the path file
 	 * @param bobPaths the array of paths to be appended together
 	 */
-	public static void appendAndExportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, String newPathName, BobPath... bobPaths) {
-		Path path = appendPaths(newPathName, bobPaths);
+	public static void appendAndExportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, String newPathName, Config config, BoTHPath... bobPaths) {
+		Path path = appendPaths(newPathName, config, bobPaths);
 		serializePath(serializer, relativeDirectoryName, path);
 	}
 }

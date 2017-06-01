@@ -56,10 +56,11 @@ public class Spline {
     return Math.abs(x - y) < 1E-6;
   }
 
-  public static boolean reticulateSplines(WaypointSequence.Waypoint start,
-          WaypointSequence.Waypoint goal, Spline result, Type type) {
-    return reticulateSplines(start.x, start.y, start.theta, goal.x, goal.y,
-            goal.theta, result, type);
+  public static boolean reticulateSplines(Waypoint start,
+          Waypoint goal, Spline result, Type type) {
+	  //swap the x and y coordinates in order to calculate
+    return reticulateSplines(start.getY(), start.getX(), start.getTheta(), goal.getY(), goal.getX(),
+            goal.getTheta(), result, type);
   }
 
   public static boolean reticulateSplines(double x0, double y0, double theta0,

@@ -1,31 +1,45 @@
 package com.team319.ui;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import com.team254.lib.trajectory.Path;
-import com.team254.lib.trajectory.Trajectory.Segment;
+import com.team254.lib.trajectory.TrajectoryGenerator.Config;
+import com.team254.lib.trajectory.Waypoint;
+import com.team319.trajectory.BoTHPath;
+import com.team319.trajectory.BoTHPathGenerator;
 
-import javafx.application.*;
-import javafx.scene.*;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.stage.*;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 
 public class Plotter {
 	
+	private boolean initialized;
+	private ScatterChart<Number, Number> sc;
+	
+	private void initialize() {
+		initialized = true;
+		
+		final NumberAxis yAxis = new NumberAxis(0, 324, 12);
+		final NumberAxis xAxis = new NumberAxis(-162, 162, 12);
+		sc = new ScatterChart<Number, Number>(xAxis, yAxis);
+		sc.setScaleX(1);
+		sc.setScaleY(1);
+		sc.setLegendVisible(false);
+		sc.setTitle("");
+	}
+		
 	public Plotter(){}
 	
+	@SuppressWarnings("unchecked")
 	public void plotChezyTrajectory(Path path) {
-		Stage stage = new Stage();
+		if (!initialized) {
+			initialize();
+		}
 		
-		stage.setTitle("Scatter Chart Sample");
-		
-		final NumberAxis xAxis = new NumberAxis(getMinXY(path)[0]-2.5, getMaxXY(path)[0]+2.5, .5);
-		final NumberAxis yAxis = new NumberAxis(getMinXY(path)[1]-2.5, getMaxXY(path)[1]+2.5, .5);
-		final ScatterChart<Number, Number> sc = new ScatterChart<Number, Number>(xAxis, yAxis);
-		xAxis.setLabel("x");
-		yAxis.setLabel("y");
 		DecimalFormat df = new DecimalFormat("0.00##");
 		StringBuilder title = new StringBuilder();
 		title.append(path.getName()).append(" : ")
@@ -33,116 +47,48 @@ public class Plotter {
 		.append("s");
 		sc.setTitle(title.toString());
 
-		ScatterChart.Series series1 = new ScatterChart.Series();
-		
-		series1.setName("Left");
+		Series<Number, Number> left = new Series<>();
+		left.setName("Left");
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series1.getData().add(new XYChart.Data(path.getPair().left.getSegment(i).x, path.getPair().left.getSegment(i).y));
+			left.getData().add(new Data<Number, Number>(path.getPair().left.getSegment(i).y, path.getPair().left.getSegment(i).x));
 		}
 
-		XYChart.Series series2 = new XYChart.Series();
-		series2.setName("Right");
+		Series<Number, Number> right = new Series<>();
+		right.setName("Right");
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
+			right.getData().add(new Data<Number, Number>(path.getPair().right.getSegment(i).y, path.getPair().right.getSegment(i).x));
 		}
 		
-		sc.getData().addAll(series1, series2);
-		Scene scene = new Scene(sc, 1000, 800);
-		scene.getStylesheets().clear();
-		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
-		stage.setScene(scene);
-		stage.show();
-	}
-	/*
-	public void plotChezyTrajectory(Path path, double xMin, double xMax, double yMin, double yMax) {
-		Stage stage = new Stage();
-		stage.setTitle("Scatter Chart Sample");
-		
-		final NumberAxis xAxis = new NumberAxis(xMin, xMax, .5);
-		final NumberAxis yAxis = new NumberAxis(yMin, yMax, .5);
-		final ScatterChart<Number, Number> sc = new ScatterChart<Number, Number>(xAxis, yAxis);
-		xAxis.setLabel("x");
-		yAxis.setLabel("y");
-		sc.setTitle(path.getName());
-
-		XYChart.Series series1 = new XYChart.Series();
-		series1.setName("Left");
-		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series1.getData().add(new XYChart.Data(path.getPair().left.getSegment(i).x, path.getPair().left.getSegment(i).y));
-		}
-
-		XYChart.Series series2 = new XYChart.Series();
-		series2.setName("Right");
-		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
-		}
-		
-		sc.getData().addAll(series1, series2);
-		Scene scene = new Scene(sc, 1000, 800);
-		scene.getStylesheets().clear();
-		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
-		stage.setScene(scene);
-		stage.show();
-	}
-	*/
-	private double[] getMaxXY(Path p)
-	{
-		double maxX = -100;
-		double maxY = -100;
-		for (Segment s : p.getPair().left.getSegments()) {
-			if (s.x > maxX)
-			{
-				maxX = s.x;
-			}
-			if (s.y > maxY)
-			{
-				maxY = s.y;
-			}	
-		}
-		
-		for (Segment s : p.getPair().right.getSegments()) {
-			if (s.x > maxX)
-			{
-				maxX = s.x;
-			}
-			if (s.y > maxY)
-			{
-				maxY = s.y;
-			}	
-		}
-		
-		double[] max = {maxX, maxY};
-		return max;
+		sc.getData().addAll(left, right);
 	}
 	
-	private double[] getMinXY(Path p)
-	{
-		double minX = 100;
-		double minY = 100;
-		for (Segment s : p.getPair().left.getSegments()) {
-			if (s.x < minX)
-			{
-				minX = s.x;
-			}
-			if (s.y < minY)
-			{
-				minY = s.y;
-			}	
-		}
-		
-		for (Segment s : p.getPair().right.getSegments()) {
-			if (s.x < minX)
-			{
-				minX = s.x;
-			}
-			if (s.y < minY)
-			{
-				minY = s.y;
-			}	
-		}
-		
-		double[] min = {minX, minY};
-		return min;
+	public void clearChart() {
+		sc.getData().clear();
+		sc.setTitle("");
 	}
-
+	
+	public ScatterChart<Number, Number> getChart() {
+		if (!initialized) {
+			initialize();
+		}
+		return sc;
+	}
+	
+	private void plotWaypoints(List<Waypoint> sequence) {
+		Series<Number, Number> waypoints = new Series<>();
+		waypoints.setName("Waypoints");
+		for (Waypoint waypoint : sequence) {
+			waypoints.getData().add(new XYChart.Data<Number, Number>(waypoint.getX(), waypoint.getY()));
+		}
+		sc.getData().add(waypoints);
+	}
+	
+	public void plotPath(Config config, BoTHPath path) {
+		clearChart();
+		if (path == null || path.getWaypoints().size() < 2) {
+			return;
+		}
+		plotChezyTrajectory(BoTHPathGenerator.makePath(config, path));
+		plotWaypoints(path.getWaypoints());
+	}
 }

@@ -9,11 +9,69 @@ public class TrajectoryGenerator {
 
   ///// INNER CLASSES /////
   public static class Config {
+	private double wheelBase;
+	private double wheelDiameter;
+	private double dt = 0.01;
+	private double maxVelocity;
+	private double maxAcceleration;
+	private double maxJerk;
+	private double scaleFactor = 1;
+	
+	public double getWheelBase() {
+		return wheelBase;
+	}
+	
+	public void setWheelBase(double wheelBase) {
+		this.wheelBase = wheelBase;
+	}
+	
+	public double getWheelDiameter() {
+		return wheelDiameter;
+	}
+	
+	public void setWheelDiameter(double wheelDiameter) {
+		this.wheelDiameter = wheelDiameter;
+	}
+	
+	public double getDt() {
+		return dt;
+	}
+	
+	public void setDt(double dt) {
+		this.dt = dt;
+	}
+	
+	public double getMaxVelocity() {
+		return maxVelocity;
+	}
+	
+	public void setMaxVelocity(double maxVelocity) {
+		this.maxVelocity = maxVelocity;
+	}
+	
+	public double getMaxAcceleration() {
+		return maxAcceleration;
+	}
+	
+	public void setMaxAcceleration(double maxAcceleration) {
+		this.maxAcceleration = maxAcceleration;
+	}
+	
+	public double getMaxJerk() {
+		return maxJerk;
+	}
+	
+	public void setMaxJerk(double maxJerk) {
+		this.maxJerk = maxJerk;
+	}
 
-    public double dt;
-    public double max_vel;
-    public double max_acc;
-    public double max_jerk;
+	public double getScaleFactor() {
+		return scaleFactor;
+	}
+
+	public void setScaleFactor(double scaleFactor) {
+		this.scaleFactor = scaleFactor;
+	}
   }
 
   public static class Strategy {
@@ -81,53 +139,53 @@ public class TrajectoryGenerator {
    * @param config Definition of constraints and sampling rate (WARNING: Some
    * may be ignored)
    * @param strategy Which generator to use
-   * @param start_vel The starting velocity (WARNING: May be ignored)
-   * @param start_heading The starting heading
-   * @param goal_pos The goal position
-   * @param goal_vel The goal velocity (WARNING: May be ignored)
-   * @param goal_heading The goal heading
+   * @param startVelocity The starting velocity (WARNING: May be ignored)
+   * @param startHeading The starting heading
+   * @param goalPosition The goal position
+   * @param goalVelocity The goal velocity (WARNING: May be ignored)
+   * @param goalHeading The goal heading
    * @return A Trajectory that satisfies the relevant constraints and end
    * conditions.
    */
   public static Trajectory generate(
-          Config config,
+		  Config config,
           Strategy strategy,
-          double start_vel,
-          double start_heading,
-          double goal_pos,
-          double goal_vel,
-          double goal_heading) {
+          double startVelocity,
+          double startHeading,
+          double goalPosition,
+          double goalVelocity,
+          double goalHeading) {
     // Choose an automatic strategy.
     if (strategy == AutomaticStrategy) {
-      strategy = chooseStrategy(start_vel, goal_vel, config.max_vel);
+      strategy = chooseStrategy(startVelocity, goalVelocity, config.getMaxAcceleration());
     }
 
     Trajectory traj;
     if (strategy == StepStrategy) {
-      double impulse = (goal_pos / config.max_vel) / config.dt;
+      double impulse = (goalPosition / config.getMaxAcceleration()) / config.dt;
 
       // Round down, meaning we may undershoot by less than max_vel*dt.
       // This is due to discretization and avoids a strange final
       // velocity.
       int time = (int) (Math.floor(impulse));
-      traj = secondOrderFilter(1, 1, config.dt, config.max_vel,
-              config.max_vel, impulse, time, TrapezoidalIntegration);
+      traj = secondOrderFilter(1, 1, config.dt, config.getMaxVelocity(),
+              config.getMaxVelocity(), impulse, time, TrapezoidalIntegration);
 
     } else if (strategy == TrapezoidalStrategy) {
       // How fast can we go given maximum acceleration and deceleration?
-      double start_discount = .5 * start_vel * start_vel / config.max_acc;
-      double end_discount = .5 * goal_vel * goal_vel / config.max_acc;
+      double start_discount = .5 * startVelocity * startVelocity / config.getMaxAcceleration();
+      double end_discount = .5 * goalVelocity * goalVelocity / config.getMaxAcceleration();
 
-      double adjusted_max_vel = Math.min(config.max_vel,
-              Math.sqrt(config.max_acc * goal_pos - start_discount
+      double adjusted_max_vel = Math.min(config.getMaxVelocity(),
+              Math.sqrt(config.getMaxAcceleration() * goalPosition - start_discount
                       - end_discount));
-      double t_rampup = (adjusted_max_vel - start_vel) / config.max_acc;
-      double x_rampup = start_vel * t_rampup + .5 * config.max_acc
+      double t_rampup = (adjusted_max_vel - startVelocity) / config.getMaxAcceleration();
+      double x_rampup = startVelocity * t_rampup + .5 * config.getMaxAcceleration()
               * t_rampup * t_rampup;
-      double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
+      double t_rampdown = (adjusted_max_vel - goalVelocity) / config.getMaxAcceleration();
       double x_rampdown = adjusted_max_vel * t_rampdown - .5
-              * config.max_acc * t_rampdown * t_rampdown;
-      double x_cruise = goal_pos - x_rampdown - x_rampup;
+              * config.getMaxAcceleration() * t_rampdown * t_rampdown;
+      double x_cruise = goalPosition - x_rampdown - x_rampup;
 
       // The +.5 is to round to nearest
       int time = (int) ((t_rampup + t_rampdown + x_cruise
@@ -135,29 +193,29 @@ public class TrajectoryGenerator {
 
       // Compute the length of the linear filters and impulse.
       int f1_length = (int) Math.ceil((adjusted_max_vel
-              / config.max_acc) / config.dt);
-      double impulse = (goal_pos / adjusted_max_vel) / config.dt
-              - start_vel / config.max_acc / config.dt
+              / config.getMaxAcceleration()) / config.dt);
+      double impulse = (goalPosition / adjusted_max_vel) / config.dt
+              - startVelocity / config.getMaxAcceleration() / config.dt
               + start_discount + end_discount;
-      traj = secondOrderFilter(f1_length, 1, config.dt, start_vel,
+      traj = secondOrderFilter(f1_length, 1, config.dt, startVelocity,
               adjusted_max_vel, impulse, time, TrapezoidalIntegration);
 
     } else if (strategy == SCurvesStrategy) {
       // How fast can we go given maximum acceleration and deceleration?
-      double adjusted_max_vel = Math.min(config.max_vel,
-              (-config.max_acc * config.max_acc + Math.sqrt(config.max_acc
-                      * config.max_acc * config.max_acc * config.max_acc
-                      + 4 * config.max_jerk * config.max_jerk * config.max_acc
-                      * goal_pos)) / (2 * config.max_jerk));
+      double adjusted_max_vel = Math.min(goalVelocity,
+              (-config.getMaxAcceleration() * config.getMaxAcceleration() + Math.sqrt(config.getMaxAcceleration()
+                      * config.getMaxAcceleration() * config.getMaxAcceleration() * config.getMaxAcceleration()
+                      + 4 * config.getMaxJerk() * config.getMaxJerk() * config.getMaxAcceleration()
+                      * goalPosition)) / (2 * config.getMaxJerk()));
 
       // Compute the length of the linear filters and impulse.
       int f1_length = (int) Math.ceil((adjusted_max_vel
-              / config.max_acc) / config.dt);
-      int f2_length = (int) Math.ceil((config.max_acc
-              / config.max_jerk) / config.dt);
-      double impulse = (goal_pos / adjusted_max_vel) / config.dt;
+              / config.getMaxAcceleration()) / config.getDt());
+      int f2_length = (int) Math.ceil((config.getMaxAcceleration()
+              / config.getMaxJerk()) / config.getDt());
+      double impulse = (goalPosition / adjusted_max_vel) / config.getDt();
       int time = (int) (Math.ceil(f1_length + f2_length + impulse));
-      traj = secondOrderFilter(f1_length, f2_length, config.dt, 0,
+      traj = secondOrderFilter(f1_length, f2_length, config.getDt(), 0,
               adjusted_max_vel, impulse, time, TrapezoidalIntegration);
 
     } else {
@@ -166,9 +224,9 @@ public class TrajectoryGenerator {
 
     // Now assign headings by interpolating along the path.
     // Don't do any wrapping because we don't know units.
-    double total_heading_change = goal_heading - start_heading;
+    double total_heading_change = goalHeading - startHeading;
     for (int i = 0; i < traj.getNumSegments(); ++i) {
-      traj.segments_[i].heading = start_heading + total_heading_change
+      traj.segments_[i].heading = startHeading + total_heading_change
               * (traj.segments_[i].pos)
               / traj.segments_[traj.getNumSegments() - 1].pos;
     }

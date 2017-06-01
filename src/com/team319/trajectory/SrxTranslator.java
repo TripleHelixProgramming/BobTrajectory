@@ -1,26 +1,24 @@
 package com.team319.trajectory;
 
 
-import org.json.simple.JSONObject;
-
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
-import com.team254.lib.trajectory.TrajectoryGenerator;
+import com.team254.lib.trajectory.TrajectoryGenerator.Config;
 
 public class SrxTranslator {
 
 
 	// Reads a Path object generated from 254's trajectory planning software and
 	// creates a CombinedSrxMotionProfile from it
-	public SrxTrajectory getSrxTrajectoryFromChezyPath(Path chezyPath, SrxTranslatorConfig config) {
+	public SrxTrajectory getSrxTrajectoryFromChezyPath(Path chezyPath, Config config) {
 
 		// create an array of points for the SRX
-		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
-				config.scale_factor);
+		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.getWheelDiameter(),
+				config.getScaleFactor());
 
 		// do it again for the right side
-		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.wheel_dia_inches,
-				config.scale_factor);
+		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.getWheelDiameter(),
+				config.getScaleFactor());
 
 		// create the motion profile objects
 		SrxMotionProfile left = new SrxMotionProfile(leftPoints.length, leftPoints);

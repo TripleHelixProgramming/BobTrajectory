@@ -1,27 +1,31 @@
 package com.team319.trajectory;
 
-import org.json.simple.JSONObject;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 //Combines left and right motion profiles in one object
 public class SrxTrajectory {
-	public SrxMotionProfile leftProfile;
-	public SrxMotionProfile rightProfile;
-
+	
+	private SrxMotionProfile leftProfile;
+	private SrxMotionProfile rightProfile;
+	
+	@JsonCreator
+	public SrxTrajectory() { }
+	
 	public SrxTrajectory(SrxMotionProfile left, SrxMotionProfile right) {
 		this.leftProfile = left;
 		this.rightProfile = right;
 	}
-
-	public SrxTrajectory(JSONObject json){
-		leftProfile = new SrxMotionProfile((JSONObject) json.get("left"));
-		rightProfile = new SrxMotionProfile((JSONObject) json.get("right"));
+	
+	public SrxMotionProfile getLeftProfile() {
+		return leftProfile;
 	}
-
-	public JSONObject toJson(){
-		JSONObject trajectory = new JSONObject();
-		trajectory.put("left", leftProfile.toJson());
-		trajectory.put("right",rightProfile.toJson());
-		return trajectory;
+	public void setLeftProfile(SrxMotionProfile leftProfile) {
+		this.leftProfile = leftProfile;
 	}
-
+	public SrxMotionProfile getRightProfile() {
+		return rightProfile;
+	}
+	public void setRightProfile(SrxMotionProfile rightProfile) {
+		this.rightProfile = rightProfile;
+	}
 }
