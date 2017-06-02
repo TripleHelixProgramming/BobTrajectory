@@ -167,8 +167,8 @@ public class BoTHPlanner extends Application {
 		
 		
 		ObservableList<Strategy> options = FXCollections.observableArrayList(
-				Strategy.AUTOMATIC,
 				Strategy.S_CURVE,
+				Strategy.AUTOMATIC,
 				Strategy.TRAPEZOIDAL,
 				Strategy.STEP
 				);
@@ -322,37 +322,4 @@ public class BoTHPlanner extends Application {
 			} 
 		}
 	}
-
-//	private ObservableList<BoTHPath> generatePaths() {
-//		double robot_length = 33.5;    	//   Max length 40 inches
-//		double robot_width = 36.0;		// Max width 36 inches
-//
-//		// Center wall to Center Gear Lift (Robot Facing Forwards)
-//		BoTHPath centerGear = new BoTHPath("Center");
-//		centerGear.addWaypoint(new Waypoint(0, 0, 0));
-//		centerGear.addWaypoint(new Waypoint(110.0 - robot_length, 0, 0));
-//
-//		//  Distance in feet.
-//		double forward = 148 - robot_length;         
-//		double left_right = 76 - (robot_width/2);
-//
-//		//  Robot Facing Forward
-//		BoTHPath blueBoilerGear = new BoTHPath("BlueBoilerGear");
-//		blueBoilerGear.addWaypoint(new Waypoint(0, 0, 0));
-//		blueBoilerGear.addWaypoint(new Waypoint(forward, -left_right, Math.toRadians(-60)));	
-//
-//		BoTHPath redLoaderGear = new BoTHPath("RedLoaderGear");
-//		redLoaderGear.addWaypoint(new Waypoint(0, 0, 0));
-//		redLoaderGear.addWaypoint(new Waypoint(forward, -left_right, Math.toRadians(-60)));	
-//
-//		BoTHPath blueLoaderGear = new BoTHPath("BlueLoaderGear");
-//		blueLoaderGear.addWaypoint(new Waypoint(0, 0, 0));
-//		blueLoaderGear.addWaypoint(new Waypoint(forward, left_right, Math.toRadians(60)));	
-//
-//		return FXCollections.observableArrayList (
-//				centerGear, 
-//				blueBoilerGear, 
-//				redLoaderGear, 
-//				blueLoaderGear);
-//	}
 }
