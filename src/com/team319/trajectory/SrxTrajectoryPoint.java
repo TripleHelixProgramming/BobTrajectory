@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public class SrxTrajectoryPoint {
 	
 	private double position;
-	private double rpm;
+	private double ticksPer100Ms;
 	private int dt;
 	
 	@JsonCreator
 	SrxTrajectoryPoint() { }
 	
-	public SrxTrajectoryPoint(double position, double rpm,  int dt) {
+	public SrxTrajectoryPoint(double position, double ticksPer100Ms,  int dt) {
 		this.position = position;
-		this.rpm = rpm;
+		this.ticksPer100Ms = ticksPer100Ms;
 		this.dt = dt;
 	}
 
@@ -25,12 +25,12 @@ public class SrxTrajectoryPoint {
 		this.position = position;
 	}
 
-	public double getRpm() {
-		return rpm;
+	public double getTicksPer100Ms() {
+		return ticksPer100Ms;
 	}
 
-	public void setRpm(double rpm) {
-		this.rpm = rpm;
+	public void setTicksPer100Ms(double ticksPer100Ms) {
+		this.ticksPer100Ms = ticksPer100Ms;
 	}
 
 	public int getDt() {
@@ -40,5 +40,4 @@ public class SrxTrajectoryPoint {
 	public void setDt(int dt) {
 		this.dt = dt;
 	}
-
 }

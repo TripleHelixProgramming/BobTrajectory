@@ -276,6 +276,7 @@ public class BoTHPlanner extends Application {
 
 			config.setWheelBase(Double.valueOf(prop.getProperty("wheelBase", "30")));
 			config.setWheelDiameter(Double.valueOf(prop.getProperty("wheelDiameter", "48")));
+			config.setCodesPerRev(Integer.valueOf(prop.getProperty("codesPerRev", "120")));
 			config.setMaxVelocity(Double.valueOf(prop.getProperty("maxVelocity", "48")));
 			config.setMaxAcceleration(Double.valueOf(prop.getProperty("maxAcceleration", "60")));
 			config.setMaxJerk(Double.valueOf(prop.getProperty("maxJerk", "50")));

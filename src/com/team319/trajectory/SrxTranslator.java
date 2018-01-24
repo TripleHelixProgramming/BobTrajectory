@@ -18,17 +18,17 @@ public class SrxTranslator {
 
 		// create an array of points for the SRX
 		List<SrxTrajectoryPoint> left = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.getWheelDiameter(),
-				config.getScaleFactor());
+				config.getCodesPerRev(), config.getScaleFactor());
 
 		// do it again for the right side
 		List<SrxTrajectoryPoint> right = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.getWheelDiameter(),
-				config.getScaleFactor());
+				config.getCodesPerRev(), config.getScaleFactor());
 
 		// Combine
 		return new SrxTrajectory(left, right);
 	}
 
-	public List<SrxTrajectoryPoint> extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
+	public List<SrxTrajectoryPoint> extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches, int codesPerRev,
 			double scaleFactor) {
 		// create an array of points for the SRX
 		List<SrxTrajectoryPoint> points = new ArrayList<>();
@@ -39,7 +39,7 @@ public class SrxTranslator {
 			double position = convertInchesToEncoderRotations(segment.pos, wheelDiameterInches, scaleFactor);
 
 			// translate from ips to rpm
-			double rpm = convertIpsToEncoderRpm(segment.vel, wheelDiameterInches, scaleFactor);
+			double rpm = convertIpsToEncoderTicksPer100Ms(segment.vel, wheelDiameterInches, codesPerRev, scaleFactor);
 
 			// translate from seconds to milliseconds
 			int dt = (int) (segment.dt * 1000);
@@ -49,15 +49,14 @@ public class SrxTranslator {
 		return points;
 	}
 
-	public double convertIpsToEncoderRpm(double ips, double wheelDiameterInches, double scaleFactor) {
-		// feet per minute
-		double ipm = ips * 60;
-		// wheel rpm
-		double rpm = ipm / (wheelDiameterInches * Math.PI);
+	public double convertIpsToEncoderTicksPer100Ms(double ips, double wheelDiameterInches, int codesPerRev, double scaleFactor) {
+		// wheel rps
+		double rps = ips / (wheelDiameterInches * Math.PI);
+		double rp100ms = rps / 600;
 		// encoder rpm
-		double encoderRpm = rpm * scaleFactor;
-
-		return encoderRpm;
+		double encoderCodesP100Ms = rp100ms * codesPerRev * scaleFactor;
+		
+		return encoderCodesP100Ms;
 	}
 
 	public double convertInchesToEncoderRotations(double inches, double wheelDiameterInches, double scaleFactor) {

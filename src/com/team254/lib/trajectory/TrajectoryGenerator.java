@@ -11,6 +11,7 @@ public class TrajectoryGenerator {
   public static class Config {
 	private double wheelBase;
 	private double wheelDiameter;
+	private int codesPerRev;
 	private double dt = 0.01;
 	private double maxVelocity;
 	private double maxAcceleration;
@@ -31,6 +32,14 @@ public class TrajectoryGenerator {
 	
 	public void setWheelDiameter(double wheelDiameter) {
 		this.wheelDiameter = wheelDiameter;
+	}
+	
+	public int getCodesPerRev() {
+		return codesPerRev;
+	}
+
+	public void setCodesPerRev(int codesPerRev) {
+		this.codesPerRev = codesPerRev;
 	}
 	
 	public double getDt() {
