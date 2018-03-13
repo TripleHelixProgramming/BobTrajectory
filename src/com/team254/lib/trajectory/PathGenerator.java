@@ -1,5 +1,7 @@
 package com.team254.lib.trajectory;
 
+import com.team319.trajectory.BobPath;
+
 /**
  * Generate a smooth Trajectory from a Path.
  *
@@ -18,34 +20,30 @@ public class PathGenerator {
    * @param name The name of the new path.  THIS MUST BE A VALID JAVA CLASS NAME
    * @return The path.
    */
-  public static Path makePath(WaypointSequence waypoints, 
-          TrajectoryGenerator.Config config, double wheelbase_width, 
-          String name) {
-    return new Path(name, 
-            generateLeftAndRightFromSeq(waypoints, config, wheelbase_width));
+  public static Path makePath(BobPath path) {
+    return new Path(path.getConfig().name, 
+            generateLeftAndRightFromSeq(path));
   }
 
-  static Trajectory.Pair generateLeftAndRightFromSeq(WaypointSequence path,
-          TrajectoryGenerator.Config config, double wheelbase_width) {
-    return makeLeftAndRightTrajectories(generateFromPath(path, config),
-            wheelbase_width);
+  static Trajectory.Pair generateLeftAndRightFromSeq(BobPath path) {
+    return makeLeftAndRightTrajectories(generateFromPath(path),
+            path.getConfig().wheelbase_width_feet);
   }
 
-  static Trajectory generateFromPath(WaypointSequence path,
-          TrajectoryGenerator.Config config) {
-    if (path.getNumWaypoints() < 2) {
+  static Trajectory generateFromPath(BobPath path) {
+    if (path.getWaypointSequence().getNumWaypoints() < 2) {
       return null;
     }
 
     // Compute the total length of the path by creating splines for each pair
     // of waypoints.
-    Spline[] splines = new Spline[path.getNumWaypoints() - 1];
+    Spline[] splines = new Spline[path.getWaypointSequence().getNumWaypoints() - 1];
     double[] spline_lengths = new double[splines.length];
     double total_distance = 0;
     for (int i = 0; i < splines.length; ++i) {
       splines[i] = new Spline();
-      if (!Spline.reticulateSplines(path.getWaypoint(i),
-              path.getWaypoint(i + 1), splines[i], Spline.QuinticHermite)) {
+      if (!Spline.reticulateSplines(path.getWaypointSequence().getWaypoint(i),
+              path.getWaypointSequence().getWaypoint(i + 1), splines[i], Spline.QuinticHermite)) {
         return null;
       }
       spline_lengths[i] = splines[i].calculateLength();
@@ -53,9 +51,9 @@ public class PathGenerator {
     }
 
     // Generate a smooth trajectory over the total distance.
-    Trajectory traj = TrajectoryGenerator.generate(config,
-            TrajectoryGenerator.SCurvesStrategy, 0.0, path.getWaypoint(0).theta,
-            total_distance, 0.0, path.getWaypoint(0).theta);
+    Trajectory traj = TrajectoryGenerator.generate(path.getConfig(),
+            TrajectoryGenerator.TrapezoidalStrategy, path.getStartVelocity(), path.getWaypointSequence().getWaypoint(0).theta,
+            total_distance, path.getEndVelocity(), path.getWaypointSequence().getWaypoint(0).theta);
 
     // Assign headings based on the splines.
     int cur_spline = 0;

@@ -19,7 +19,7 @@ public class SrxTranslator {
 				config.scale_factor, config.encoder_ticks_per_rev);
 		
 		// create an array of points for the SRX
-		double[][] centerPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
+		double[][] centerPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().center, config.wheel_dia_inches,
 				config.scale_factor, config.encoder_ticks_per_rev);
 
 		// do it again for the right side

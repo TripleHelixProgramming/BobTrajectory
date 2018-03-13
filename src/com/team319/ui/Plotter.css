@@ -17,3 +17,9 @@
     -fx-background-radius: 2px;
     -fx-padding: 1px;
 }
+.default-color3.chart-symbol { /* solid circle */
+	-fx-stroke: black;
+    -fx-background-color: black, black;
+    -fx-background-radius: 1px;
+    -fx-padding: 1px;
+}

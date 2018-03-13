@@ -16,8 +16,7 @@ import com.team319.ui.PathViewer;
 public class BobPathGenerator extends PathGenerator {
 
 	public static Path makePath(BobPath bobPath) {
-		Path p = PathGenerator.makePath(bobPath.getWaypointSequence(), bobPath.getConfig(), bobPath.getConfig().wheelbase_width_feet,
-				bobPath.getConfig().name);
+		Path p = PathGenerator.makePath(bobPath);
 
 		if (bobPath.getConfig().direction == -1) {
 			p = reversePath(p);
@@ -75,7 +74,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(exportPath);
+			PathViewer.showPath(exportPath, bobPaths[0].getConfig().robot_length_feet, bobPaths[0].getConfig().wheelbase_width_feet);
 		}		
 		
 	}
@@ -93,7 +92,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
 		}
 	}
 	
@@ -111,7 +110,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
 		}
 	}
 	
@@ -129,7 +128,33 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
+		}
+	}
+	
+	public static void exportArcToJavaFile(String relativeDirectoryName, BobPath... bobPaths) {
+		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
+
+		Path tmp = makePath(bobPaths[0]);
+		Path exportPath = new Path(bobPaths[0].getConfig().name, tmp.getPair());
+		
+		for (int i = 1; i < bobPaths.length; i++) {
+			tmp = makePath(bobPaths[i]);
+			exportPath.getLeftWheelTrajectory().append(tmp.getLeftWheelTrajectory());
+			exportPath.getCenterTrajectory().append(tmp.getCenterTrajectory());
+			exportPath.getRightWheelTrajectory().append(tmp.getRightWheelTrajectory());
+		}
+
+		SrxTranslator srxt = new SrxTranslator();
+		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(exportPath, bobPaths[0].getConfig());
+
+		if (!exporter.exportSrxArcAsJavaFile(combined, bobPaths[0].getConfig(), 
+				bobPaths[0].getWaypointSequence())) {
+			System.err.println("A path could not be written!!!!");
+			System.exit(1);
+		} else {
+			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
+			PathViewer.showPath(exportPath, bobPaths[0].getConfig().robot_length_feet, bobPaths[0].getConfig().wheelbase_width_feet);
 		}
 	}
 	
@@ -171,7 +196,7 @@ public class BobPathGenerator extends PathGenerator {
 		try {
 			Files.write(Paths.get(pathName), data.getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
 		} catch (IOException e) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);

@@ -6,28 +6,29 @@ import com.team254.lib.trajectory.WaypointSequence.Waypoint;
 public class BobPath {
 	private SrxTranslatorConfig config;
 	private WaypointSequence waypointSequence;
-	private boolean exportEnabled = true;
-	private boolean useDegrees = true;
+	private final double startVelocity;
+	private final double endVelocity;
 	
 	public BobPath(SrxTranslatorConfig config) {
-		this.config = new SrxTranslatorConfig(config);
-		this.waypointSequence = new WaypointSequence(10);
+		this(new SrxTranslatorConfig(config), config.name, 1);
 	}
 	
 	public BobPath(SrxTranslatorConfig config, String name, int direction) {
-		this(config);
-		this.config.name = name;
-		this.config.direction = direction;
+		this(config, name, direction, 0, 0);
 	}
 	
-	public BobPath(SrxTranslatorConfig config, String name, int direction, boolean useDegrees) {
-		this(config, name, direction);
-		this.useDegrees = useDegrees;
+	public BobPath(SrxTranslatorConfig config, String name, int direction, double startVelocity, double endVelocity) {
+		this.config.name = name;
+		this.config.direction = direction;
+		this.startVelocity = startVelocity;
+		this.endVelocity = endVelocity;
 	}
 
 	public BobPath(BobPath toCopy) {
 		config = toCopy.config;
 		waypointSequence = toCopy.waypointSequence;
+		startVelocity = toCopy.startVelocity;
+		endVelocity = toCopy.endVelocity;
 	}
 	
 	public boolean isExportEnabled() {
@@ -60,5 +61,13 @@ public class BobPath {
 	
 	public SrxTranslatorConfig getConfig(){
 		return this.config;
+	}
+	
+	public double getStartVelocity() {
+		return startVelocity;
+	}
+
+	public double getEndVelocity() {
+		return endVelocity;
 	}
 }
