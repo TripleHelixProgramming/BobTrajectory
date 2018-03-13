@@ -6,8 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class FieldChart extends ScatterChart<Number, Number> {
-	
-	ImageView iv1 = new ImageView(new Image("file:field.png",648,648,true,true));
+
+	ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
 
 	public FieldChart(NumberAxis xAxis, NumberAxis yAxis) {
 		super(xAxis, yAxis);

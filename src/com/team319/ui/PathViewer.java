@@ -9,7 +9,7 @@ import javafx.embed.swing.JFXPanel;
 
 public class PathViewer {
 
-	public static void showPath(final Path path, double robotLength, double robotWidth){
+	public static void showPath(final Path path, SrxTranslatorConfig config) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -19,7 +19,7 @@ public class PathViewer {
 					@Override
 					public void run() {
 						Plotter pl = new Plotter();
-						pl.plotChezyTrajectory(path, robotLength, robotWidth);
+						pl.plotChezyTrajectory(path, config);
 					}
 				});
 			}

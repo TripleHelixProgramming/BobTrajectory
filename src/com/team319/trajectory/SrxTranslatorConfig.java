@@ -12,10 +12,11 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 	public double scale_factor; // used for reductions between encoder and wheel
 	public int direction = 1; // 1 = forward, -1 = backward
 	public double robot_length_feet;
+	public boolean highGear;
 
 	public SrxTranslatorConfig() {
 	}
-	
+
 	public SrxTranslatorConfig(SrxTranslatorConfig toCopy) {
 		this.direction = toCopy.direction;
 		this.dt = toCopy.dt;
@@ -28,6 +29,7 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 		this.wheelbase_width_feet = toCopy.wheelbase_width_feet;
 		this.encoder_ticks_per_rev = toCopy.encoder_ticks_per_rev;
 		this.robot_length_feet = toCopy.robot_length_feet;
+		this.highGear = toCopy.highGear;
 	}
 
 	public JSONObject toJson() {
