@@ -18,10 +18,12 @@ public class BobPath {
 	}
 	
 	public BobPath(SrxTranslatorConfig config, String name, int direction, double startVelocity, double endVelocity) {
+		this.config = config;
 		this.config.name = name;
 		this.config.direction = direction;
 		this.startVelocity = startVelocity;
 		this.endVelocity = endVelocity;
+		this.waypointSequence = new WaypointSequence(10);
 	}
 
 

@@ -77,7 +77,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(exportPath, bobPaths[0].getConfig().robot_length_feet, bobPaths[0].getConfig().wheelbase_width_feet);
+			PathViewer.showPath(exportPath, bobPaths[0].getConfig());
 		}		
 		
 	}
@@ -95,7 +95,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
 	}
 
@@ -112,7 +112,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
 	}
 
@@ -133,7 +133,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
 	}
 	
@@ -159,7 +159,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(exportPath, bobPaths[0].getConfig().robot_length_feet, bobPaths[0].getConfig().wheelbase_width_feet);
+			PathViewer.showPath(exportPath, bobPaths[0].getConfig());
 		}
 	}
 
@@ -205,7 +205,7 @@ public class BobPathGenerator extends PathGenerator {
 		try {
 			Files.write(Paths.get(pathName), data.getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
-			PathViewer.showPath(chezyPath, bobPath.getConfig().robot_length_feet, bobPath.getConfig().wheelbase_width_feet);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		} catch (IOException e) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);

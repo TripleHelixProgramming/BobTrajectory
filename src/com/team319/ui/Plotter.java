@@ -10,6 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.layout.Region;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class Plotter {
@@ -49,11 +52,17 @@ public class Plotter {
 		XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
 		series3.setName("Center");
 		for (int i = 0; i < path.getPair().center.getNumSegments(); i++) {
-			series3.getData().add(new XYChart.Data<Number, Number>(path.getPair().center.getSegment(i).x, path.getPair().center.getSegment(i).y));
+			Segment segment = path.getPair().center.getSegment(i);
+			Data<Number, Number> data = new Data<Number, Number>(segment.x, segment.y);
+			Region plotpoint = new Region();
+	        plotpoint.setShape(new Circle(0.1));
+	        plotpoint.setStyle("-fx-background-color: #" + getColor(segment.vel, 10) + "; -fx-stroke: #" +  getColor(segment.vel, 10) + ";");
+	        data.setNode(plotpoint);
+			series3.getData().add(data);
 		}
 
 		
-		sc.getData().addAll(series1, series2, series3, getBotSeries(path, robotLength, robotWidth));
+		sc.getData().addAll(series1, series2, series3);
 		Scene scene = new Scene(sc, 725, 780);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
@@ -81,5 +90,18 @@ public class Plotter {
 		double rotatedY = tempX * Math.sin(theta) + tempY * Math.cos(theta);
 		
 		return new XYChart.Data<Number, Number>(rotatedX + segment.x, rotatedY + segment.y);
+	}
+	
+	private String getColor(double speed, double limit) {
+		if (speed >= limit) {
+			return "000000";
+		}
+		if (speed / limit == 0.5) {
+			return "ffff00";
+		}
+		double percentage = speed / limit * 100;
+	    int green = percentage < 50 ? 255 : (int)Math.floor(256 - (percentage - 50 ) * 5.12);
+	    int red = percentage > 50 ? 255 : (int)Math.floor((percentage) * 5.12);
+	    return String.format("%02X", red) + String.format("%02X", green) + "00";
 	}
 }

@@ -3,6 +3,7 @@ package com.team319.ui;
 import javax.swing.SwingUtilities;
 
 import com.team254.lib.trajectory.Path;
+import com.team319.trajectory.SrxTranslatorConfig;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;

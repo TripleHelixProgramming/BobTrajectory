@@ -20,7 +20,7 @@ public class Main {
 		//Standard configs between all trajectories
 		standardConfig.name = "StandardConfig";
 		standardConfig.dt = .01;
-		standardConfig.max_acc = 5;
+		standardConfig.max_acc = 7;
 		standardConfig.max_jerk = 60.0;
 		standardConfig.max_vel = 7.0; 
 		standardConfig.wheelbase_width_feet = inInches(32);
@@ -100,7 +100,7 @@ public class Main {
 		
 		SrxTranslatorConfig firstPathConfig = new SrxTranslatorConfig(standardConfig);
 		firstPathConfig.max_vel = 10;
-		firstPathConfig.max_acc = 5;
+		firstPathConfig.max_acc = 7;
 		
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
 		slowConfig.max_vel = 2.0;
@@ -114,7 +114,7 @@ public class Main {
 		turnConfig.max_vel = 5.0;
 		turnConfig.max_acc = 4;
 		
-		BobPath sameSideScale = new BobPath(firstPathConfig, "SameSideScale", 1);
+		BobPath sameSideScale = new BobPath(firstPathConfig, "SameSideScale", 1, 0, 0.75);
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH/2), 0 + 23, 0));
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(200), inInches(0) + 23, 0));
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(282), inInches(-15) + 23, Math.toRadians(-25)));
@@ -174,15 +174,15 @@ public class Main {
 	
 	private static void generateBaseline() {
 		SrxTranslatorConfig oppositeSideScaleConfig = new SrxTranslatorConfig(standardConfig);
-		oppositeSideScaleConfig.max_vel = 5.0;
-		oppositeSideScaleConfig.max_acc = 3;
+		oppositeSideScaleConfig.max_vel = 7.0;
+		oppositeSideScaleConfig.max_acc = 5;
 		
-		BobPath baseline = new BobPath(oppositeSideScaleConfig, "Baseline", 1);
+		BobPath baseline = new BobPath(oppositeSideScaleConfig, "Baseline", 1, 0, 1);
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH/2), 0 + 23, 0));
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(0) + 23, 0));
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(235), inInches(-65) + 23, Math.toRadians(-89.99)));
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(235), inInches(-100) + 23, Math.toRadians(-89.99)));
-
+		
 		BobPathGenerator.exportArcToJavaFile("Paths", baseline);
 	}
 	
