@@ -22,7 +22,7 @@ public class Main {
 		standardConfig.max_acc = 5;
 		standardConfig.max_jerk = 60.0;
 		standardConfig.max_vel = 7.0; 
-		standardConfig.wheelbase_width_feet = inInches(32);
+		standardConfig.wheelbase_width_feet = inInches(28);
 		standardConfig.wheel_dia_inches = 5;
 		standardConfig.scale_factor = 1.33; 
 		standardConfig.encoder_ticks_per_rev = 480;
