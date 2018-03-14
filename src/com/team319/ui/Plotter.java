@@ -5,12 +5,11 @@ import java.text.DecimalFormat;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory.Segment;
 
-import javafx.application.*;
-import javafx.scene.*;
+import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.stage.*;
+import javafx.stage.Stage;
 
 public class Plotter {
 	
@@ -21,9 +20,9 @@ public class Plotter {
 		
 		stage.setTitle("Scatter Chart Sample");
 		
-		final NumberAxis xAxis = new NumberAxis(getMinXY(path)[0]-2.5, getMaxXY(path)[0]+2.5, .5);
-		final NumberAxis yAxis = new NumberAxis(getMinXY(path)[1]-2.5, getMaxXY(path)[1]+2.5, .5);
-		final ScatterChart<Number, Number> sc = new ScatterChart<Number, Number>(xAxis, yAxis);
+		final NumberAxis xAxis = new NumberAxis(0, 27, 1);
+		final NumberAxis yAxis = new NumberAxis(0, 27, 1);
+		final FieldChart sc = new FieldChart(xAxis, yAxis);
 		xAxis.setLabel("x");
 		yAxis.setLabel("y");
 		DecimalFormat df = new DecimalFormat("0.00##");
