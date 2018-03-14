@@ -21,7 +21,7 @@ public class Plotter {
 	public void plotChezyTrajectory(Path path) {
 		Stage stage = new Stage();
 
-		stage.setTitle("Scatter Chart Sample");
+		stage.setTitle(path.getName());
 
 		Canvas canvas = new Canvas(648, 648);
 		GraphicsContext gc = canvas.getGraphicsContext2D();

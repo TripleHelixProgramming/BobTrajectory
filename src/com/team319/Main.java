@@ -37,8 +37,8 @@ public class Main {
 	
 	private static void generateCenterSwitch() {
 		BobPath centerSwitch = new BobPath(standardConfig, "CenterSwitch", 1);
-		centerSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH), 0, 0));
-		centerSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(140), inInches(60), 0));
+		centerSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 0 + 13.5, 0));
+		centerSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(127), inInches(60) + 13.5, 0));
 		
 		BobPathGenerator.exportPathToJavaFile("Paths", centerSwitch);
 	}
@@ -71,8 +71,8 @@ public class Main {
 		straightConfig.max_acc = 8;
 		
 		BobPath sameSideSwitchPart1point6 = new BobPath(straightConfig, "SameSideSwitchPart1point6", 1);
-		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(0), inInches(0), Math.toRadians(0)));
-		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(22), inInches(0), 0));
+		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(172), inInches(0) + 23, Math.toRadians(90)));
+		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(172), inInches(-22) + 23, Math.toRadians(90)));
 		
 		BobPath sameSideSwitchPart2 = new BobPath(turnConfig, "SameSideSwitchPart2", 1);
 		sameSideSwitchPart2.addWaypoint(new WaypointSequence.Waypoint(inInches(0), inInches(0), Math.toRadians(0)));
@@ -151,7 +151,7 @@ public class Main {
 		
 		BobPath oppositeSideScale = new BobPath(oppositeSideScaleConfig, "OppositeSideScale", 1);
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 0 + 23, 0));
-		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(18) + 23, 0));
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(0) + 23, 0));
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(235), inInches(-65) + 23, Math.toRadians(-89.99)));
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(235), inInches(-145) + 23, Math.toRadians(-89.99)));
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(275), inInches(-200) + 23, Math.toRadians(0.00)));
@@ -189,7 +189,7 @@ public class Main {
 		
 		BobPath baseline = new BobPath(oppositeSideScaleConfig, "Baseline", 1);
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 23, 0));
-		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(24) + 23, 0));
+		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(0) + 23, 0));
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(239), inInches(-65) + 23, Math.toRadians(-89.99)));
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(239), inInches(-100) + 23, Math.toRadians(-89.99)));
 

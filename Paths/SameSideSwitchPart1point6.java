@@ -7,8 +7,8 @@ public class SameSideSwitchPart1point6 extends SrxTrajectory{
 	
 	// WAYPOINTS:
 	// (X,Y,degrees)
-	// (0.00,0.00,0.00)
-	// (1.83,0.00,0.00)
+	// (14.33,23.00,90.00)
+	// (14.33,21.17,90.00)
 	
 	public SameSideSwitchPart1point6() {
 		this(false);
