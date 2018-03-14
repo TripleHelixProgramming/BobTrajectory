@@ -21,8 +21,6 @@ public class Plotter {
 	public void plotChezyTrajectory(Path path) {
 		Stage stage = new Stage();
 
-		stage.setTitle(path.getName());
-
 		Canvas canvas = new Canvas(648, 648);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		DecimalFormat df = new DecimalFormat("0.00##");
@@ -30,6 +28,7 @@ public class Plotter {
 		title.append(path.getName()).append(" : ")
 		.append(df.format(path.getLeftWheelTrajectory().getNumSegments() * path.getLeftWheelTrajectory().getSegment(0).dt))
 		.append("s");
+		stage.setTitle(title.toString());
 		gc.setLineWidth(5);
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
 			gc.setFill(Color.BLUE);
