@@ -5,143 +5,94 @@ import java.text.DecimalFormat;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory.Segment;
 
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Plotter {
-	
+
 	public Plotter(){}
-	
+
 	public void plotChezyTrajectory(Path path) {
 		Stage stage = new Stage();
-		
+
 		stage.setTitle("Scatter Chart Sample");
-		
-		final NumberAxis xAxis = new NumberAxis(0, 27, 1);
-		final NumberAxis yAxis = new NumberAxis(0, 27, 1);
-		final FieldChart sc = new FieldChart(xAxis, yAxis);
-		xAxis.setLabel("x");
-		yAxis.setLabel("y");
+
+		Canvas canvas = new Canvas(648, 648);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
 		DecimalFormat df = new DecimalFormat("0.00##");
 		StringBuilder title = new StringBuilder();
 		title.append(path.getName()).append(" : ")
 		.append(df.format(path.getLeftWheelTrajectory().getNumSegments() * path.getLeftWheelTrajectory().getSegment(0).dt))
 		.append("s");
-		sc.setTitle(title.toString());
-
-		ScatterChart.Series series1 = new ScatterChart.Series();
-		
-		series1.setName("Left");
+		gc.setLineWidth(5);
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series1.getData().add(new XYChart.Data(path.getPair().left.getSegment(i).x, path.getPair().left.getSegment(i).y));
+			gc.setFill(Color.BLUE);
+			gc.setStroke(Color.BLUE);
+			gc.fillOval(path.getPair().left.getSegment(i).x * 24, getFieldPoint(path.getPair().left.getSegment(i).y), 1, 1);
 		}
 
-		XYChart.Series series2 = new XYChart.Series();
-		series2.setName("Right");
-		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
+		for (int i = 0; i < path.getPair().right.getNumSegments(); i++) {
+			gc.setFill(Color.RED);
+			gc.setStroke(Color.RED);
+			gc.fillOval(path.getPair().right.getSegment(i).x * 24, getFieldPoint(path.getPair().right.getSegment(i).y), 1, 1);
 		}
-		
-		sc.getData().addAll(series1, series2);
-		Scene scene = new Scene(sc, 1000, 800);
-		scene.getStylesheets().clear();
-		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
-		stage.setScene(scene);
+
+		for (int i = 0; i < path.getPair().right.getNumSegments(); i++) {
+			gc.setFill(Color.PURPLE);
+			gc.setStroke(Color.PURPLE);
+			gc.fillOval(
+					(path.getPair().right.getSegment(i).x + path.getPair().left.getSegment(i).x) / 2 * 24, 
+					getFieldPoint((path.getPair().right.getSegment(i).y + path.getPair().left.getSegment(i).y) / 2), 1, 1);
+		}
+
+		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
+		Segment start = getCenteredSegment(
+				path.getPair().left.getSegment(0), 
+				path.getPair().right.getSegment(0));
+		Segment end = getCenteredSegment(
+				path.getPair().left.getSegment(path.getPair().left.getNumSegments() - 1), 
+				path.getPair().right.getSegment(path.getPair().left.getNumSegments() - 1));
+		drawRobot(start, canvas);
+		drawRobot(end, canvas);
+		Group root = new Group();
+		root.getChildren().add(iv1);
+		root.getChildren().add(canvas);
+		stage.setScene(new Scene(root));
 		stage.show();
-	}
-	/*
-	public void plotChezyTrajectory(Path path, double xMin, double xMax, double yMin, double yMax) {
-		Stage stage = new Stage();
-		stage.setTitle("Scatter Chart Sample");
-		
-		final NumberAxis xAxis = new NumberAxis(xMin, xMax, .5);
-		final NumberAxis yAxis = new NumberAxis(yMin, yMax, .5);
-		final ScatterChart<Number, Number> sc = new ScatterChart<Number, Number>(xAxis, yAxis);
-		xAxis.setLabel("x");
-		yAxis.setLabel("y");
-		sc.setTitle(path.getName());
-
-		XYChart.Series series1 = new XYChart.Series();
-		series1.setName("Left");
-		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series1.getData().add(new XYChart.Data(path.getPair().left.getSegment(i).x, path.getPair().left.getSegment(i).y));
-		}
-
-		XYChart.Series series2 = new XYChart.Series();
-		series2.setName("Right");
-		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
-		}
-		
-		sc.getData().addAll(series1, series2);
-		Scene scene = new Scene(sc, 1000, 800);
-		scene.getStylesheets().clear();
-		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
-		stage.setScene(scene);
-		stage.show();
-	}
-	*/
-	private double[] getMaxXY(Path p)
-	{
-		double maxX = -100;
-		double maxY = -100;
-		for (Segment s : p.getPair().left.getSegments()) {
-			if (s.x > maxX)
-			{
-				maxX = s.x;
-			}
-			if (s.y > maxY)
-			{
-				maxY = s.y;
-			}	
-		}
-		
-		for (Segment s : p.getPair().right.getSegments()) {
-			if (s.x > maxX)
-			{
-				maxX = s.x;
-			}
-			if (s.y > maxY)
-			{
-				maxY = s.y;
-			}	
-		}
-		
-		double[] max = {maxX, maxY};
-		return max;
 	}
 	
-	private double[] getMinXY(Path p)
-	{
-		double minX = 100;
-		double minY = 100;
-		for (Segment s : p.getPair().left.getSegments()) {
-			if (s.x < minX)
-			{
-				minX = s.x;
-			}
-			if (s.y < minY)
-			{
-				minY = s.y;
-			}	
-		}
-		
-		for (Segment s : p.getPair().right.getSegments()) {
-			if (s.x < minX)
-			{
-				minX = s.x;
-			}
-			if (s.y < minY)
-			{
-				minY = s.y;
-			}	
-		}
-		
-		double[] min = {minX, minY};
-		return min;
+	private Segment getCenteredSegment(Segment left, Segment right) {
+		Segment centered = new Segment();
+		centered.x = (left.x + right.x) / 2;
+		centered.y = (left.y + right.y) / 2;
+		centered.heading = left.heading;
+		return centered;
+	}
+	
+	private void drawRobot(Segment segment, Canvas canvas) {
+		double x = segment.x * 24;
+	    double y = getFieldPoint(segment.y);
+	    double width = 66;
+	    double height = 66;
+
+	    GraphicsContext gc = canvas.getGraphicsContext2D();
+
+	    gc.save();
+	    gc.translate(x, y);
+	    gc.rotate(Math.toDegrees(-segment.heading));
+	    gc.strokeRoundRect(-width/2, -height/2, width, height, 10, 10);
+	    gc.translate(-x, -y);
+
+	    gc.restore();
 	}
 
+	private double getFieldPoint(double point) {
+		return 648 - point * 24;
+	}
 }
