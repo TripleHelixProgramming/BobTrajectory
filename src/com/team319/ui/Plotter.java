@@ -52,17 +52,11 @@ public class Plotter {
 		XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
 		series3.setName("Center");
 		for (int i = 0; i < path.getPair().center.getNumSegments(); i++) {
-			Segment segment = path.getPair().center.getSegment(i);
-			Data<Number, Number> data = new Data<Number, Number>(segment.x, segment.y);
-			Region plotpoint = new Region();
-	        plotpoint.setShape(new Circle(0.1));
-	        plotpoint.setStyle("-fx-background-color: #" + getColor(segment.vel, 10) + "; -fx-stroke: #" +  getColor(segment.vel, 10) + ";");
-	        data.setNode(plotpoint);
-			series3.getData().add(data);
+			series3.getData().add(new XYChart.Data<Number, Number>(path.getPair().center.getSegment(i).x, path.getPair().center.getSegment(i).y));
 		}
 
 		
-		sc.getData().addAll(series1, series2, series3);
+		sc.getData().addAll(series3, getBotSeries(path, config.robot_length_feet, config.wheelbase_width_feet));
 		Scene scene = new Scene(sc, 725, 780);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
