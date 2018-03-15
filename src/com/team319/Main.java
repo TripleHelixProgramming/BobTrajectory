@@ -32,6 +32,7 @@ public class Main {
 		generateSameSideScale();
 		generateOppositeSideScale();
 		generateBaseline();
+		generateOppositeSideSwitch();
 //		generateConfig();
 	}
 	
@@ -199,6 +200,20 @@ public class Main {
 		baseline.addWaypoint(new WaypointSequence.Waypoint(inInches(239), inInches(-100) + 23, Math.toRadians(-89.99)));
 
 		BobPathGenerator.exportPathToJavaFile("Paths", baseline);
+	}
+	
+	private static void generateOppositeSideSwitch() {
+		SrxTranslatorConfig oppositeSideSwitchConfig = new SrxTranslatorConfig(standardConfig);
+		oppositeSideSwitchConfig.max_vel = 5.0;
+		oppositeSideSwitchConfig.max_acc = 3;
+		
+		BobPath opposideSideSiwtch = new BobPath(oppositeSideSwitchConfig, "OppositeSideSwitch", 1);
+		opposideSideSiwtch.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 23, 0));
+		opposideSideSiwtch.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(0) + 23, 0));
+		opposideSideSiwtch.addWaypoint(new WaypointSequence.Waypoint(inInches(239), inInches(-100) + 23, Math.toRadians(-89.99)));
+		opposideSideSiwtch.addWaypoint(new WaypointSequence.Waypoint(inInches(220), inInches(-150) + 23, Math.toRadians(-135)));
+
+		BobPathGenerator.exportPathToJavaFile("Paths", opposideSideSiwtch);
 	}
 	
 	private static void generateConfig() {
