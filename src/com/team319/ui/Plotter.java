@@ -77,8 +77,8 @@ public class Plotter {
 	private void drawRobot(Segment segment, Canvas canvas) {
 		double x = segment.x * 24;
 	    double y = getFieldPoint(segment.y);
-	    double width = 66;
-	    double height = 66;
+	    double width = 39 * 2;
+	    double height = 36 * 2;
 
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
 
