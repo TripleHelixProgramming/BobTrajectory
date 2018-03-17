@@ -22,9 +22,9 @@ public class Main {
 		standardConfig.max_acc = 5;
 		standardConfig.max_jerk = 60.0;
 		standardConfig.max_vel = 7.0; 
-		standardConfig.wheelbase_width_feet = inInches(28);
+		standardConfig.wheelbase_width_feet = inInches(31.5);
 		standardConfig.wheel_dia_inches = 5;
-		standardConfig.scale_factor = 1.33; 
+		standardConfig.scale_factor = 1.39; 
 		standardConfig.encoder_ticks_per_rev = 480;
 
 		generateCenterSwitch();
@@ -33,7 +33,7 @@ public class Main {
 		generateOppositeSideScale();
 		generateBaseline();
 		generateOppositeSideSwitch();
-//		generateConfig();
+		generateConfig();
 	}
 	
 	private static void generateCenterSwitch() {
@@ -103,7 +103,7 @@ public class Main {
 		sameSideScaleConfig.max_acc = 4;
 		
 		SrxTranslatorConfig firstPathConfig = new SrxTranslatorConfig(standardConfig);
-		firstPathConfig.max_vel = 10;
+		firstPathConfig.max_vel = 8;
 		firstPathConfig.max_acc = 5;
 		
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
@@ -219,7 +219,7 @@ public class Main {
 	
 	private static void generateConfig() {
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
-		slowConfig.max_vel = 2.0;
+		slowConfig.max_vel = 5.0;
 		slowConfig.max_acc = 3;
 		
 		BobPath scalingCalibration = new BobPath(standardConfig, "scaling_calibration", 1);
