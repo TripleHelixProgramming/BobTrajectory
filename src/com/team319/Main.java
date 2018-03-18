@@ -37,7 +37,7 @@ public class Main {
 		generateOppositeSideScale();
 		generateBaseline();
 		generateOppositeSideSwitch();
-//		generateConfig();
+		generateConfig();
 	}
 	
 	private static void generateCenterSwitch() {
