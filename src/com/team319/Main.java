@@ -103,7 +103,7 @@ public class Main {
 		sameSideScaleConfig.max_acc = 4;
 		
 		SrxTranslatorConfig firstPathConfig = new SrxTranslatorConfig(standardConfig);
-		firstPathConfig.max_vel = 8;
+		firstPathConfig.max_vel = 6;
 		firstPathConfig.max_acc = 5;
 		
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
@@ -121,7 +121,7 @@ public class Main {
 		BobPath sameSideScale = new BobPath(firstPathConfig, "SameSideScale", 1);
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 0 + 23, 0));
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(200), inInches(0) + 23, 0));
-		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(275), inInches(-15) + 23, Math.toRadians(-25)));
+		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(265), inInches(-25) + 23, Math.toRadians(-25)));
 		
 		BobPath sameSideScalePart2 = new BobPath(turnConfig, "SameSideScalePart2", 1);
 		sameSideScalePart2.addWaypoint(0, 0, 0);
