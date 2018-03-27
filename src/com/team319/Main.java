@@ -211,7 +211,7 @@ public class Main {
 	
 	private static void generateConfig() {
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
-		slowConfig.max_vel = 2.0;
+		slowConfig.max_vel = 4.0;
 		slowConfig.max_acc = 3;
 		
 		BobPath scalingCalibration = new BobPath(standardConfig, "scaling_calibration", 1);
