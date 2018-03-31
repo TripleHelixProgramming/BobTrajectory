@@ -55,9 +55,9 @@ public class Main {
 		
 		BobPath sameSideSwitch = new BobPath(slowConfig, "SameSideSwitch", 1);
 		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 0 + 23, 0));
-		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(145), inInches(10) + 23, 0));
-		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(172), inInches(-18) + 23, Math.toRadians(-89)));
-//		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(172), inInches(0) + 23, 0));
+//		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(125), inInches(15) + 23, 0));
+//		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(152), inInches(-18) + 23, Math.toRadians(-89)));
+		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inInches(157), inInches(0) + 23, 0));
 		
 		SrxTranslatorConfig turnConfig = new SrxTranslatorConfig(standardConfig);
 		turnConfig.max_vel = 4.0;
@@ -72,8 +72,8 @@ public class Main {
 		straightConfig.max_acc = 8;
 		
 		BobPath sameSideSwitchPart1point6 = new BobPath(straightConfig, "SameSideSwitchPart1point6", 1);
-		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(172), inInches(0) + 23, Math.toRadians(90)));
-		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(172), inInches(-18) + 23, Math.toRadians(90)));
+		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(157), inInches(0) + 23, Math.toRadians(90)));
+		sameSideSwitchPart1point6.addWaypoint(new WaypointSequence.Waypoint(inInches(157), inInches(-16) + 23, Math.toRadians(90)));
 		
 		BobPath sameSideSwitchPart2 = new BobPath(turnConfig, "SameSideSwitchPart2", 1);
 		sameSideSwitchPart2.addWaypoint(new WaypointSequence.Waypoint(inInches(0), inInches(0), Math.toRadians(0)));
@@ -121,22 +121,22 @@ public class Main {
 		BobPath sameSideScale = new BobPath(firstPathConfig, "SameSideScale", 1);
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 0 + 23, 0));
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(200), inInches(0) + 23, 0));
-		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(265), inInches(-25) + 23, Math.toRadians(-25)));
+		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(265), inInches(-30) + 23, Math.toRadians(-25)));
 		
 		BobPath sameSideScalePart2 = new BobPath(turnConfig, "SameSideScalePart2", 1);
 		sameSideScalePart2.addWaypoint(0, 0, 0);
 		sameSideScalePart2.addWaypoint(inDegrees(125), 0, 0);
 		
 		BobPath sameSideScalePart3 = new BobPath(sameSideScaleConfig, "SameSideScalePart3", 1);
-		sameSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(inInches(275), inInches(-15) + 23, Math.toRadians(-150)));
-		sameSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(inInches(234), inInches(-32) + 23, Math.toRadians(-160)));
+		sameSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(inInches(275), inInches(-20) + 23, Math.toRadians(-150)));
+		sameSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(inInches(227), inInches(-38) + 23, Math.toRadians(-160)));
 		
 		BobPath sameSideScalePart4 = new BobPath(turnConfigFast, "SameSideScalePart4", 1);
 		sameSideScalePart4.addWaypoint(0, 0, 0);
 		sameSideScalePart4.addWaypoint(inDegrees(160), 0, 0);
 		
 		BobPath sameSideScalePart5 = new BobPath(sameSideScaleConfig, "SameSideScalePart5", 1);
-		sameSideScalePart5.addWaypoint(new WaypointSequence.Waypoint(inInches(234), inInches(-32) + 23, Math.toRadians(0)));
+		sameSideScalePart5.addWaypoint(new WaypointSequence.Waypoint(inInches(233), inInches(-35) + 23, Math.toRadians(0)));
 		sameSideScalePart5.addWaypoint(new WaypointSequence.Waypoint(inInches(275), inInches(-32) + 23, Math.toRadians(0)));
 		
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideScale);
@@ -154,8 +154,8 @@ public class Main {
 		BobPath oppositeSideScale = new BobPath(oppositeSideScaleConfig, "OppositeSideScale", 1);
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(ROBOT_LENGTH / 2), 0 + 23, 0));
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(160), inInches(0) + 23, 0));
-		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(235), inInches(-65) + 23, Math.toRadians(-89.99)));
-		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(235), inInches(-145) + 23, Math.toRadians(-89.99)));
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(239), inInches(-65) + 23, Math.toRadians(-89.99)));
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(239), inInches(-145) + 23, Math.toRadians(-89.99)));
 		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(275), inInches(-200) + 23, Math.toRadians(0.00)));
 		
 		SrxTranslatorConfig turnConfig = new SrxTranslatorConfig(standardConfig);
@@ -191,7 +191,7 @@ public class Main {
 	
 	private static void generateBaseline() {
 		SrxTranslatorConfig oppositeSideScaleConfig = new SrxTranslatorConfig(standardConfig);
-		oppositeSideScaleConfig.max_vel = 5.0;
+		oppositeSideScaleConfig.max_vel = 3.0;
 		oppositeSideScaleConfig.max_acc = 3;
 		
 		BobPath baseline = new BobPath(oppositeSideScaleConfig, "Baseline", 1);
