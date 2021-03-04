@@ -37,7 +37,11 @@ public class ParametricCubicSpline extends Spline {
     }
 
     public Pose2d getPoint(double t) {
-        return new Pose2d(x(t), y(t), Math.atan2(dy(t), dx(0)));
+        return new Pose2d(x(t), y(t), Math.atan2(dy(t), dx(t)));
+    }
+
+    public double arcLengthSegment(double t) {
+        return Math.sqrt(dx(t) * dx(t) + dy(t) * dy(t));
     }
 
     private double x(double t) {
@@ -71,28 +75,4 @@ public class ParametricCubicSpline extends Spline {
         
 		return integral;
     }
-    
-    public double calculateInput(double distance) {
-
-        final int kNumSamples = 100000;
-        double integral = 0;
-        double last_integral = 0;
-        double t = 0;
-        double integrand, last_integrand = Math.sqrt(dx(0) * dx(0) + dy(0) * dy(0)) / kNumSamples;
-        
-		for (double i = 1; i <= kNumSamples; ++i) {
-            t = i / kNumSamples;
-			integrand = Math.sqrt(dx(t) * dx(t) + dy(t) * dy(t)) / kNumSamples;
-            integral += (integrand + last_integrand) / 2;
-            if (integral > distance) break;
-            last_integrand = integrand;
-            last_integral = integral;
-        }
-        
-        if (integral != last_integral) {
-            return t + ((distance - last_integral) / (integral - last_integral) - 1) / kNumSamples;
-        }
-
-		return t;
-	}
 }

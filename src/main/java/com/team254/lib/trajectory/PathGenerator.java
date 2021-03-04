@@ -31,32 +31,10 @@ public class PathGenerator {
 							waypoints.get(i).getMaxVelocity()));
 		}
 
-		assignHeadings(traj, splines);
+		SplineGenerator.parametrizeSplines(traj, splines);
 		correctHeading(traj);
 		return traj;
 	}	
-
-	private static void assignHeadings(Trajectory traj, Spline[] splines) {
-		// Assign headings based on the splines.
-		int cur_spline = 0;
-		double start_pos = 0;
-		double splineLength = splines[0].calculateLength();
-		for (Segment segment : traj.getSegments()) {
-
-			if (segment.pos - start_pos > splineLength && cur_spline < splines.length - 1) {
-				start_pos += splineLength;
-				splineLength = splines[cur_spline + 1].calculateLength();
-				cur_spline++;
-			}
-
-			double input = Math.min(1, splines[cur_spline].calculateInput(segment.pos - start_pos));
-			Pose2d pose = splines[cur_spline].getPoint(input);
-
-			segment.x = pose.x();
-			segment.y = pose.y();
-			segment.heading = pose.getRotation();
-		}
-	}
 
 	private static void correctHeading(Trajectory trajectory) {
 		// Fix headings so they are continuously additive 

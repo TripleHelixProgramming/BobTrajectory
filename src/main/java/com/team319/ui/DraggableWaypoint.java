@@ -184,6 +184,10 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
         this.maxVelocity = maxVelocity;
     }
 
+    public double getDistance(DraggableWaypoint w1) {
+        return Math.sqrt((w1.getX() - getX()) * (w1.getX() - getX()) + (w1.getY() - getY()) * (w1.getY() - getY()));
+    }
+
     /**
      * @return the isFirst
      */
