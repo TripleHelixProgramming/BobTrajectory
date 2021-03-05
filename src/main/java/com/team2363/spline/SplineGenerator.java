@@ -50,7 +50,7 @@ public class SplineGenerator {
                 lastIntegral = integral;
             }
 
-            Pose2d pose = splines[currentSpline].getPoint(result);
+            Pose2d pose = splines[currentSpline].getPoint(Math.min(result, 1));
             segment.x = pose.x();
             segment.y = pose.y();
             segment.heading = pose.getRotation();
