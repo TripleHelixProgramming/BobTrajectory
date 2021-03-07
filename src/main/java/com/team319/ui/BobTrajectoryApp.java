@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JFileChooser;
 
 import com.google.common.base.Strings;
+import com.team2363.waypointpaths.waypoints.WaypointPath;
 import com.team319.io.ConfigExporter;
 import com.team319.io.ConfigImporter;
 import com.team319.io.PathExporter;
@@ -71,10 +72,12 @@ public class BobTrajectoryApp extends JFrame {
 
         SaveButton saveButton = new SaveButton();
         saveButton.addActionListener(new SavePath());
-        saveButton.setEnabled(false);
 
         OpenButton openButton = new OpenButton();
         openButton.addActionListener(new OpenPath());
+
+        // RobotTransferButton robotTransferButton = new RobotTransferButton();
+        // robotTransferButton.addActionListener(new RobotTransfer());
 
         buttons.setBackground(new Color(50, 50, 50));
         buttons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -113,16 +116,16 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void exportPath(BobPath path, File file) {
-            PathExporter.exportPath(path, file);
-            TrajectoryExporter.exportTrajectory(path, file);
-     }
+        PathExporter.exportPath(path, file);
+        PathExporter.exportWaypointClass(path, file); // change to exportPath to use old save function
+    }
 
      private void enableSaveButton() {
         Component c = buttons.getComponent(3); // If there's a better way to get a particular button, like find by name, that'd be better
         if (c instanceof SaveButton) {
             c.setEnabled(true);
         }
-     }
+    }
 
     private class CreateNewPath implements ActionListener {
 		@Override
@@ -185,7 +188,10 @@ public class BobTrajectoryApp extends JFrame {
             if (JFileChooser.APPROVE_OPTION == saveResult) {
                 Component c = tabs.getSelectedComponent();    
                 if (c instanceof Plotter) {
-                    BobPath path = ((Plotter)c).getPath();        
+                    BobPath path = ((Plotter)c).getPath();
+                    /*
+                        I removed the functionality of SavePath and replaced it with class exporting because it was disabled anyways.
+                    */ 
                     /*
                         The FileChooser SaveDialog is a bit wonky. If you create a folder, you are placed in the folder,
                         but the selected file remains the parent folder. So if you use the selected file,
@@ -202,7 +208,7 @@ public class BobTrajectoryApp extends JFrame {
                         }
                     }
                     exportPath(path, file);
-                    ConfigExporter.exportConfig(file);
+                    //ConfigExporter.exportConfig(file);
                 }
             }      
 		}

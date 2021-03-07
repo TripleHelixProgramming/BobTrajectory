@@ -1,7 +1,10 @@
 package com.team319.trajectory;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.team2363.waypointpaths.waypoints.Waypoint;
+import com.team2363.waypointpaths.waypoints.WaypointPath;
 import com.team319.ui.DraggableWaypoint;
 
 public class BobPath {
@@ -12,6 +15,14 @@ public class BobPath {
 	public BobPath(String name, List<DraggableWaypoint> waypoints) {
 		this.name = name;
 		this.waypoints = waypoints;
+	}
+
+	public WaypointPath toWaypointPath() {
+		List<Waypoint> waypointList = new ArrayList<>();
+		for (DraggableWaypoint draggableWaypoint : waypoints) {
+			waypointList.add(draggableWaypoint.toWaypoint());
+		}
+		return new WaypointPath(name, waypointList);
 	}
 
 	/**

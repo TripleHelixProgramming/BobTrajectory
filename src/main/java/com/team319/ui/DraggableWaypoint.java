@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 
 import javax.swing.JOptionPane;
 
+import com.team2363.waypointpaths.waypoints.Waypoint;
 import com.team319.trajectory.RobotConfig;
 
 public class DraggableWaypoint implements MouseListener, MouseMotionListener {
@@ -118,6 +119,10 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
         gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
         gc.rotate(heading);
         gc.translate(-x, -y);
+    }
+
+    public Waypoint toWaypoint() {
+        return new Waypoint(x, y, heading, currentVelocity, maxVelocity);
     }
 
     private int getTailX(int x) {
