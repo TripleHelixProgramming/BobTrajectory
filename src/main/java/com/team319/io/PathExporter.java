@@ -2,8 +2,9 @@ package com.team319.io;
 
 import java.util.List;
 
-import com.team2363.waypointpaths.waypoints.WaypointPath;
 import com.team319.trajectory.BobPath;
+import com.team319.ui.DraggableWaypoint;
+
 import java.io.File;
 
 public class PathExporter {
@@ -27,12 +28,32 @@ public class PathExporter {
         }
     }
     
-    public static void exportWaypointClass(BobPath bobPath, File file) {
-        WaypointPath path = bobPath.toWaypointPath(); // assume not null
-        try {
-            FilePrinter.write(file.getAbsolutePath(),"/" + path.getName() + ".java", path.generateWaypointClass());
-        } catch (Exception e) {
-            System.out.println("Execption trying to save a path. " + e + " " + e.getMessage());
+    public static void exportPathClass(BobPath path, File file) {
+        StringBuilder classString = new StringBuilder();
+        classString.append("package com.team2363.waypointpaths;\n\n");
+        classString.append("public class " + path.getName() + " {\n");
+        classString.append("    public static double[][] getWaypoints() {\n");
+        classString.append("        return new double[][]{\n");
+        for (DraggableWaypoint waypoint : path.getWaypoints()) {
+            classString.append("        " + generateDoubleArrayInstantiation(waypoint) + ",\n");
         }
+        classString.append("        };\n");
+        classString.append("    public static String getName() {\n");
+        classString.append("        return \"" + path.getName() + "\";\n");
+        classString.append("    }\n");
+        classString.append("}");
+        
+        FilePrinter.write(file.getAbsolutePath(),"/" + path.getName() + ".java", classString.toString());
+    }
+
+    public static String generateDoubleArrayInstantiation(DraggableWaypoint waypoint) {
+        return new StringBuilder()
+        .append("{")
+        .append(waypoint.getX() + ", ")
+        .append(waypoint.getY() + ", ")
+        .append(waypoint.getHeading() + ", ")
+        .append(waypoint.getMaxVelocity() + ", ")
+        .append(waypoint.getCurrentVelocity() + "}")
+        .toString();
     }
 }

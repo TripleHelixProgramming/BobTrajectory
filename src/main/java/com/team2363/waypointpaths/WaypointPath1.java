@@ -1,11 +1,5 @@
 package com.team2363.waypointpaths;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import com.team2363.waypointpaths.waypoints.Waypoint;
-import com.team2363.waypointpaths.waypoints.WaypointPath;
-
 public class WaypointPath1 {
     private static WaypointPath waypointPath;
 

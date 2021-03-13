@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JFileChooser;
 
 import com.google.common.base.Strings;
-import com.team2363.waypointpaths.waypoints.WaypointPath;
 import com.team319.io.ConfigExporter;
 import com.team319.io.ConfigImporter;
 import com.team319.io.PathExporter;
@@ -116,7 +115,7 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void exportPath(BobPath path, File file) {
-        PathExporter.exportPath(path, file);
+        // PathExporter.exportPath(path, file);
         PathExporter.exportWaypointClass(path, file); // change to exportPath to use old save function
     }
 
