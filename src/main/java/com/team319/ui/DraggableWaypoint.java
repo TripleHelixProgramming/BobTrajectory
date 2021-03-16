@@ -215,10 +215,10 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     @Override
     public String toString() {
         return new StringBuilder()
-        .append(getX()).append("\n")
-        .append(getY()).append("\n")
-        .append(heading).append("\n")
-        .append(currentVelocity).append("\n")
+        .append(getX()).append(",")
+        .append(getY()).append(",")
+        .append(heading).append(",")
+        .append(currentVelocity).append(",")
         .append(maxVelocity).toString();
     }
 

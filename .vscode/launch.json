@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - BobTrajectoryApp",
+      "request": "launch",
+      "mainClass": "com.team319.ui.BobTrajectoryApp",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Main",
       "request": "launch",
       "mainClass": "com.team2363.Main",

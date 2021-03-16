@@ -26,7 +26,6 @@ import com.team319.io.ConfigExporter;
 import com.team319.io.ConfigImporter;
 import com.team319.io.PathExporter;
 import com.team319.io.PathImporter;
-import com.team319.io.TrajectoryExporter;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.RobotConfig;
 
@@ -111,12 +110,6 @@ public class BobTrajectoryApp extends JFrame {
             paths.add(((Plotter) tab).getPath());
         }
         PathExporter.exportPaths(paths);
-        TrajectoryExporter.exportTrajectory(paths);
-    }
-
-    private void exportPath(BobPath path, File file) {
-        // PathExporter.exportPath(path, file);
-        PathExporter.exportWaypointClass(path, file); // change to exportPath to use old save function
     }
 
      private void enableSaveButton() {
@@ -206,8 +199,8 @@ public class BobTrajectoryApp extends JFrame {
                             file = file.getParentFile();
                         }
                     }
-                    exportPath(path, file);
-                    //ConfigExporter.exportConfig(file);
+                    PathExporter.exportPath(path, file);
+                    ConfigExporter.exportConfig(file);
                 }
             }      
 		}
@@ -234,7 +227,7 @@ public class BobTrajectoryApp extends JFrame {
         RobotConfig.wheelBase = configuration.getWheelBase();
         RobotConfig.maxAcceleration = configuration.getMaxAcceleration();
         RobotConfig.maxVelocity = configuration.getMaxVelocity();
-        RobotConfig.exportType = configuration.getExportType();
+        RobotConfig.dt = configuration.getDt();
     }
 
     private class SaveHandler implements WindowListener {

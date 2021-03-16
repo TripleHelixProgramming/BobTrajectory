@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import com.team319.trajectory.ExportType;
 import com.team319.trajectory.RobotConfig;
 
 public class ConfigurationPanel extends JPanel {
@@ -19,6 +18,7 @@ public class ConfigurationPanel extends JPanel {
     private JTextField wheelBase = new JTextField();
     private JTextField maxAcceleration = new JTextField();
     private JTextField maxVelocity = new JTextField();
+    private JTextField dt = new JTextField();
     private ButtonGroup types = new ButtonGroup();
     private JRadioButton fileType = new JRadioButton("File");
     private JRadioButton classType = new JRadioButton("Class");
@@ -30,16 +30,6 @@ public class ConfigurationPanel extends JPanel {
         wheelBase.setText("" + RobotConfig.wheelBase);
         maxAcceleration.setText("" + RobotConfig.maxAcceleration);
         maxVelocity.setText("" + RobotConfig.maxVelocity);
-
-        types.add(fileType);
-        types.add(classType);
-        switch (RobotConfig.exportType) {
-            case CLASS:
-                classType.setSelected(true);
-                break;
-            case FILE:
-                fileType.setSelected(true);
-        }
     }
 
     private void setupWindowLayout() {
@@ -81,11 +71,7 @@ public class ConfigurationPanel extends JPanel {
         return Double.valueOf(maxVelocity.getText());
     }
 
-    public ExportType getExportType() {
-        if (classType.isSelected()) {
-            return ExportType.CLASS;
-        } else {
-            return ExportType.FILE;
-        }
+    public double getDt() {
+        return Double.valueOf(dt.getText());
     }
 }
