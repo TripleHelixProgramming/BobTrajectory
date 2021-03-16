@@ -15,7 +15,7 @@ public class ConfigImporter {
      */
     public static void importConfig(File file) {
         if (file == null){
-            file = new File(defaultPath + "config.csv");
+            file = new File(defaultPath, "config.csv");
         } else {
             List<List<String>> data = FileUtil.parseCSV(file);
             RobotConfig.length = Double.parseDouble(data.get(0).get(0));

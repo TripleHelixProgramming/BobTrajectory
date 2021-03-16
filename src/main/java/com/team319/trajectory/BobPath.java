@@ -45,10 +45,10 @@ public class BobPath {
 	@Override
 	public String toString() {
 		StringBuilder pathString = new StringBuilder();
-		pathString.append(name).append("\n");
 		for (DraggableWaypoint waypoint : waypoints) {
 			pathString.append(waypoint.toString()).append("\n");
 		}
-		return pathString.toString();
+		String pathsString = pathString.toString();
+		return pathsString.substring(0, pathsString.length() - 1);
 	}
 }
