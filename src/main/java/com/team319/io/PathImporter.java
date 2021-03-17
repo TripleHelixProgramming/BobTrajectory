@@ -35,7 +35,7 @@ public class PathImporter {
     public static Plotter importPath(File file) {
         List<List<String>> list = FileUtil.parseCSV(file);
         String pathName = file.getName();
-        pathName = pathName.substring(0, pathName.length() - 3);
+        pathName = pathName.substring(0, pathName.length() - 4);
         Plotter plotter = new Plotter(pathName);
         if (list == null) {
             return plotter;
