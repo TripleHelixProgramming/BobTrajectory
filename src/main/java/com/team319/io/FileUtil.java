@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +42,43 @@ public class FileUtil {
             System.out.println("Problem printing file: " + e);
         }
     }
+    
+    /**
+     * Compares the names of two <code>File</code> types.
+     * 
+     * @param file1 first <code>File</code> to check
+     * @param file2 second <code>File</code> to check
+     * @return <code>true</code> if both <code>File</code> names are equal, <code>false</code> otherwise.
+     */
+    public static boolean compareFileNames(File file1, File file2) {
+        if ((file1 == null || !file1.exists()) || (file2 == null || !file2.exists())) {
+            return false;
+        }
+        return file1.getName().equals(file2.getName());
+    }
+
+    /**
+     * Compares two files: returns <code>true</code> if the two files have
+     * equal contents, and returns <code>false</code> otherwise.
+     * 
+     * @param file1 first <code>File</code> to check
+     * @param file2 second <code>File</code> to check
+     * @return <code>true</code> if the contents are equal and <code>false</code> otherwise
+     */
+    public static boolean compareFileContents(File file1, File file2) {
+        if ((file1 == null || !file1.exists()) || (file2 == null || !file2.exists())) {
+            return false;
+        }
+        try {
+            String cleanedFile1 = Files.readString(Paths.get(file1.getAbsolutePath())).trim();
+            String cleanedFile2 = Files.readString(Paths.get(file2.getAbsolutePath())).trim();
+            return cleanedFile1.equals(cleanedFile2);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 
     /**
      * Parses a CSV <code>File</code> to a <code>List</code>.
@@ -48,6 +87,9 @@ public class FileUtil {
      * @param file <code>File</code> to parse
      */
     public static List<List<String>> parseCSV(File file) {
+        if (file == null || !file.exists()) {
+            return null;
+        }
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             List<List<String>> list = new ArrayList<>();

@@ -2,12 +2,10 @@ package com.team319.io;
 
 import java.util.List;
 import java.io.File;
-
 import com.team319.trajectory.BobPath;
+import com.team319.trajectory.RobotConfig;
 
 public class PathExporter {
-    private static final String defaultPath = "src/main/java/frc/paths/paths/";
-    
     /**
      * Exports a <code>List</code> of type <code>BobPath</code> 
      * to the default directory as CSV.
@@ -15,7 +13,7 @@ public class PathExporter {
      * @param paths <code>List</code> of type <code>BobPath</code> to export
      */
     public static void exportPaths(List<BobPath> paths) {
-        File file = new File(defaultPath);
+        File file = new File(RobotConfig.pathsDirectory, "paths");
         for (BobPath path : paths) {
             exportPath(path, file);
         }

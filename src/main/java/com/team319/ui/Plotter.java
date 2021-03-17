@@ -100,6 +100,9 @@ public class Plotter extends JPanel {
         return new BobPath(pathName, waypointListener.getWaypoints());
     }
 
+    public void addWaypoint(DraggableWaypoint waypoint) {
+        getWaypointListener().getWaypoints().add(waypoint);
+    }
     /**
      * @return the fieldHeight
      */

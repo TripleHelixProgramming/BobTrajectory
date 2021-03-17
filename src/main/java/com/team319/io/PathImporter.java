@@ -6,73 +6,43 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.team319.ui.DraggableWaypoint;
 import com.team319.ui.Plotter;
 
 public class PathImporter {
-
     public static List<Plotter> importPaths() {
-        File file = new File( "src/main/java/frc/paths/Paths.txt");
-        return importPaths(file);
     }
 
-    public static List<Plotter> importPaths(File file) {
-        List<Plotter> paths = new ArrayList<>();
-        if (!file.exists()) {
-            return paths;
+    public static List<Plotter> importPaths(File filePath) {
+        
+    }
+
+    public static Plotter importPath(File file) {
+        List<List<String>> list = FileUtil.parseCSV(file);
+        if (list == null) {
+            return null;
         }
+        String pathName = file.getName();
+        pathName = pathName.substring(0, pathName.length() - 3);
+        Plotter plotter = new Plotter(pathName);
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            List<String> data = collectLines(br);
-            br.close();
-            while (!data.isEmpty()) {
-                String name = data.remove(0);
-                Plotter plotter = new Plotter(name);
-                paths.add(plotter);
-                importWaypoints(data, plotter);
+            for (List<String> waypoint : list) {
+                double x = Double.parseDouble(waypoint.get(0).trim());
+                double y = Double.parseDouble(waypoint.get(1).trim());
+                double heading = Double.parseDouble(waypoint.get(2).trim());
+                double currentVelocity = Double.parseDouble(waypoint.get(3).trim());
+                double maxVelocity = Double.parseDouble(waypoint.get(4).trim());
+                DraggableWaypoint dWaypoint = new DraggableWaypoint(x, y, heading, currentVelocity, maxVelocity, plotter);
+                plotter.addWaypoint(dWaypoint);
             }
         } catch (Exception e) {
-            System.out.println("There was an error importing the saved paths.");
-            e.printStackTrace();
-            return new ArrayList<>();
+            if (e instanceof IndexOutOfBoundsException) {
+                System.out.println("Not enough columns on path file CSV (STOP EDITING PATH FILES)");
+            } else if (e instanceof NumberFormatException) {
+                System.out.println("Number formatted incorrectly on path file CSV (STOP EDITING PATH FILES)");
+            }
+            System.out.println(e);
         }
-        return paths;
-    }
 
-    private static List<String> collectLines(BufferedReader br) throws IOException {
-        List<String> data = new ArrayList<>();
-        String read;
-        while ((read = br.readLine()) != null) {
-            data.add(read);
-        }
-        return data;
-    }
-
-    private static void importWaypoints(List<String> data, Plotter plotter) {
-        while (!data.isEmpty() && isNumeric(data.get(0))) {
-            importWaypoint(data, plotter);
-        }
-        plotter.getWaypointListener().updateVelocities();
-    }
-
-    private static void importWaypoint(List<String> data, Plotter plotter) {
-        double x = Double.parseDouble(data.remove(0));
-        double y = Double.parseDouble(data.remove(0));
-        double heading = Double.parseDouble(data.remove(0));
-        double currentVelocity = Double.parseDouble(data.remove(0));
-        double maxVelocity = Double.parseDouble(data.remove(0));
-
-        DraggableWaypoint waypoint = new DraggableWaypoint(x, y, heading, currentVelocity, maxVelocity, plotter);
-        plotter.getWaypointListener().getWaypoints().add(waypoint);
-    }
-
-    public static boolean isNumeric(String strNum) {
-        try {
-            Double.parseDouble(strNum);
-        } catch (NumberFormatException | NullPointerException nfe) {
-            return false;
-        }
-        return true;
     }
 }

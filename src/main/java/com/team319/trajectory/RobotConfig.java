@@ -1,6 +1,7 @@
 package com.team319.trajectory;
 
 public class RobotConfig {
+	public static final String pathsDirectory = "src/main/java/frc/paths/";
 	public static double length = 2.5; // in feet
 	public static double width = 2.5; // in feet
 	public static double wheelBase = 2.17; // in feet

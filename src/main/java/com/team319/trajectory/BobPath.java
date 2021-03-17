@@ -1,14 +1,19 @@
 package com.team319.trajectory;
 
 import java.util.List;
-
 import com.team319.ui.DraggableWaypoint;
 
 public class BobPath {
-
 	private String name;
 	private List<DraggableWaypoint> waypoints;
 
+	/**
+	 * Creates a <code>BobPath</code> with a name and a <code>List</code>
+	 * of type <code>DraggableWaypoint</code>.
+	 * 
+	 * @param name
+	 * @param waypoints
+	 */
 	public BobPath(String name, List<DraggableWaypoint> waypoints) {
 		this.name = name;
 		this.waypoints = waypoints;
@@ -42,6 +47,12 @@ public class BobPath {
 		this.waypoints = waypoints;
 	}
 
+	/**
+	 * Returns a a comma-deliminated <code>String</code> that contains
+	 * each waypoint on a separate line.
+	 * 
+	 * @return a <code>String</code> representing the path
+	 */
 	@Override
 	public String toString() {
 		StringBuilder pathString = new StringBuilder();
