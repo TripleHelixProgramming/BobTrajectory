@@ -6,25 +6,40 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.team319.trajectory.RobotConfig;
 import com.team319.ui.DraggableWaypoint;
 import com.team319.ui.Plotter;
 
 public class PathImporter {
     public static List<Plotter> importPaths() {
+        return importPaths(new File(RobotConfig.pathsDirectory, "paths"));
     }
 
     public static List<Plotter> importPaths(File filePath) {
-        
+        List<Plotter> plotterList = new ArrayList<>();
+        if (filePath == null) {
+            return new ArrayList<>();
+        }
+        try {
+            String[] files = filePath.list();
+            for (String file : files) {
+                plotterList.add(importPath(new File(filePath, file)));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return plotterList;
     }
 
     public static Plotter importPath(File file) {
         List<List<String>> list = FileUtil.parseCSV(file);
-        if (list == null) {
-            return null;
-        }
         String pathName = file.getName();
         pathName = pathName.substring(0, pathName.length() - 3);
         Plotter plotter = new Plotter(pathName);
+        if (list == null) {
+            return plotter;
+        }
         try {
             for (List<String> waypoint : list) {
                 double x = Double.parseDouble(waypoint.get(0).trim());
@@ -43,6 +58,6 @@ public class PathImporter {
             }
             System.out.println(e);
         }
-
+        return plotter;
     }
 }
