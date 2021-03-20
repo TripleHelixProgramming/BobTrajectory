@@ -1,25 +1,35 @@
 package com.team319.io;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.team319.trajectory.RobotConfig;
 import com.team319.ui.DraggableWaypoint;
 import com.team319.ui.Plotter;
 
+/**
+ * This class imports path files as type <code>Plotter</code>.
+ */
 public class PathImporter {
+    /**
+     * Default import method that imports all paths in the <code>/paths</code> directory.
+     * 
+     * @return <code>List</code> of type <code>Plotter</code> representing all paths
+     */
     public static List<Plotter> importPaths() {
         return importPaths(new File(RobotConfig.pathsDirectory, "paths"));
     }
 
+    /**
+     * Imports all paths in the speicifed directory.
+     * 
+     * @param filePath directory to search for paths
+     * @return
+     */
     public static List<Plotter> importPaths(File filePath) {
         List<Plotter> plotterList = new ArrayList<>();
-        if (filePath == null) {
-            return new ArrayList<>();
+        if (filePath == null || !filePath.exists()) {
+            return plotterList;
         }
         try {
             String[] files = filePath.list();

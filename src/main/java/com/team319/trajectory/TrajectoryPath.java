@@ -1,6 +1,6 @@
 package com.team319.trajectory;
 
-public abstract class Path {
+public abstract class TrajectoryPath {
 
      public enum SegmentValue { 
          TIME_STAMP, X, Y, 

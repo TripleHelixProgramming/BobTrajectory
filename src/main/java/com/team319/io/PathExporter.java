@@ -25,7 +25,15 @@ public class PathExporter {
      * @param path type <code>BobPath</code>
      * @param file directory to save <code>path</code> in
      */
-    public static void exportPath(BobPath path, File file) {
-        FileUtil.write(file, path.getName() + ".csv", path.toString());
+    public static void exportPath(BobPath path, File filePath) {
+        if (path == null) {
+            System.out.println("The BobPath provided is null.");
+            return;
+        }
+        if (filePath == null) {
+            System.out.println("The File provided is null.");
+            return;
+        }
+        FileUtil.write(filePath, path.getName() + ".csv", path.toString());
     }
 }

@@ -14,17 +14,36 @@ import java.util.Arrays;
 public class FileUtil {
     /**
      * Writes <code>String</code> data to a <code>File</code>.
+     * Accepts a <code>File</code> and a <code>String</code> for the file name.
+     * The extension of the <code>File</code> should be included in the name.
      * 
-     * @param filePath target directory <code>File</code> where <code>data</code> is saved
+     * @param filePath target <code>File</code> where <code>data</code> is saved
      * @param fileName name of file
      * @param data <code>String</code> data to be written to <code>filePath</code>
      */
     public static void write(File filePath, String fileName, String data) {
         if (filePath == null) {
+            System.out.println("File provided is null.");
+            return;
+        }
+        filePath = new File(filePath, fileName);
+        write(filePath, data);
+    }
+
+    /**
+     * Writes <code>String</code> data to a <code>File</code>.
+     * Accpets a single <code>File</code> that represents one file,
+     * not a directory.
+     * 
+     * @param file target directory <code>File</code> where <code>data</code> is saved
+     * @param data <code>String</code> data to be written to <code>filePath</code>
+     */
+    public static void write(File file, String data) {
+        if (file == null) {
+            System.out.println("File provided is null");
             return;
         }
         try {
-            File file = new File(filePath, fileName);
             System.out.println("Saving to file: " + file.getCanonicalPath());
             file.getParentFile().mkdirs();
             // if file doesn't exist, then create it
@@ -32,7 +51,7 @@ public class FileUtil {
                 if(!file.createNewFile()) {
                     System.out.println("Could not create output file " + file.getCanonicalPath());
                     return;
-                }                
+                }
             }
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
@@ -98,13 +117,15 @@ public class FileUtil {
                 String[] values = line.split(",");
                 list.add(Arrays.asList(values));
             }
-            while (list.get(list.size() - 1).size() == 1 && list.get(list.size() - 1).get(0).trim().equals("")) {
-                list.remove(list.size() - 1);
+            if (list.size() > 0) {
+                while (list.get(list.size() - 1).size() == 1 && list.get(list.size() - 1).get(0).trim().equals("")) {
+                    list.remove(list.size() - 1);
+                }
             }
             reader.close();
             return list;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e);
             return null;
         }
     }

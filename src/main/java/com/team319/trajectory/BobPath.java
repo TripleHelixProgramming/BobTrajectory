@@ -60,6 +60,6 @@ public class BobPath {
 			pathString.append(waypoint.toString()).append("\n");
 		}
 		String pathsString = pathString.toString();
-		return pathsString.substring(0, pathsString.length() - 1);
+		return pathsString.substring(0, Math.max(pathsString.length() - 1, 0));
 	}
 }

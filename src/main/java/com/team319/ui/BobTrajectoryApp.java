@@ -21,7 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFileChooser;
 
-import com.google.common.base.Strings;
 import com.team319.io.ConfigExporter;
 import com.team319.io.ConfigImporter;
 import com.team319.io.PathExporter;
@@ -122,7 +121,7 @@ public class BobTrajectoryApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
-            if (Strings.isNullOrEmpty(name)) {
+            if (name == null || name.equals("")) {
                 return;
             }
 

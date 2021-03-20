@@ -8,7 +8,7 @@ public class ConfigExporter {
      * Exports the config to the default path.
      */
     public static void exportConfig() {
-        exportConfig(new File(RobotConfig.pathsDirectory, "config"));
+        exportConfig(null);
     }
 
     /**
@@ -18,7 +18,7 @@ public class ConfigExporter {
      */
     public static void exportConfig(File file) {
         if (file == null) {
-            exportConfig();
+            file = new File(RobotConfig.pathsDirectory, "config");
         } else {
             StringBuilder data = new StringBuilder();
             data.append(RobotConfig.length).append("\n");

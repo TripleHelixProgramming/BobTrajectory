@@ -1,6 +1,10 @@
 package com.team319.io;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import com.team319.trajectory.RobotConfig;
 
@@ -16,10 +20,14 @@ public class ConfigImporter {
      * Imports a config <code>File</code>
      * 
      * @param file the directory where the config file is found
+     * @return <code>true</code> if the file exists, and <code>false</code> if the file does not exist
      */
-    public static void importConfig(File file) {
-        if (file == null || !file.exists()) {
+    public static boolean importConfig(File file) {
+        if (file == null) {
             file = new File(RobotConfig.pathsDirectory, "config/config.csv");
+        }
+        if (!file.exists()) {
+            return false;
         }
         List<List<String>> data = FileUtil.parseCSV(file);
         try {
@@ -37,5 +45,6 @@ public class ConfigImporter {
             }
             System.out.println(e);
         }
+        return true;
     }
 }

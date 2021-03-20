@@ -30,6 +30,7 @@ public class ConfigurationPanel extends JPanel {
         wheelBase.setText("" + RobotConfig.wheelBase);
         maxAcceleration.setText("" + RobotConfig.maxAcceleration);
         maxVelocity.setText("" + RobotConfig.maxVelocity);
+        dt.setText("" + RobotConfig.dt);
     }
 
     private void setupWindowLayout() {
