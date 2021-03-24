@@ -1,10 +1,7 @@
 package com.team2363;
-
-import org.apache.commons.net.ftp.*;
-import com.team319.ui.BobTrajectoryApp;
-
+import com.team319.io.FileManager;
 public class Main {
     public static void main(String... args) {
-        RobotFTP.transferPaths();
+        FileManager.generate();
     }
 }

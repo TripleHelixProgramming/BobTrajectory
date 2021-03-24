@@ -19,15 +19,14 @@ public class ConfigExporter {
     public static void exportConfig(File file) {
         if (file == null) {
             file = new File(RobotConfig.pathsDirectory, "config");
-        } else {
-            StringBuilder data = new StringBuilder();
-            data.append(RobotConfig.length).append("\n");
-            data.append(RobotConfig.width).append("\n");
-            data.append(RobotConfig.wheelBase).append("\n");
-            data.append(RobotConfig.maxVelocity).append("\n");
-            data.append(RobotConfig.maxAcceleration).append("\n");
-            data.append(RobotConfig.dt);
-            FileUtil.write(file, "config.csv", data.toString());
         }
+        StringBuilder data = new StringBuilder();
+        data.append(RobotConfig.length).append("\n");
+        data.append(RobotConfig.width).append("\n");
+        data.append(RobotConfig.wheelBase).append("\n");
+        data.append(RobotConfig.maxVelocity).append("\n");
+        data.append(RobotConfig.maxAcceleration).append("\n");
+        data.append(RobotConfig.dt);
+        FileUtil.write(file, "config.csv", data.toString());
     }
 }
