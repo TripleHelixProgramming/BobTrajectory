@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JOptionPane;
 
-import com.team254.lib.trajectory.Spline;
+import com.team2363.path.Spline;
 
 public class ClickableSpline implements MouseListener{
     private static final int DIAMETER = 20;
@@ -28,8 +28,8 @@ public class ClickableSpline implements MouseListener{
     public ClickableSpline(Spline spline, Plotter parentPanel, DraggableWaypoint startPoint, DraggableWaypoint endPoint) {
         this.spline = spline;
         this.parentPanel = parentPanel;
-        this.clickableX = spline.getXandY(0.5)[0];
-        this.clickableY = spline.getXandY(0.5)[1];
+        this.clickableX = spline.getTranslation(0.5).x();
+        this.clickableY = spline.getTranslation(0.5).y();
         this.endPoint = endPoint;
         this.startPoint = startPoint;
         parentPanel.addMouseListener(this);
@@ -55,7 +55,7 @@ public class ClickableSpline implements MouseListener{
 
     private void drawSpline(Graphics2D gc) {
         for (double i = 0; i <= 1; i += 0.005) {
-            double[] xy = spline.getXandY(i);
+            double[] xy = {spline.getTranslation(i).x(), spline.getTranslation(i).y()};
                 gc.fillOval(
                     Plotter.convertXToPixel(xy[0]) - 2, Plotter.convertYToPixel(xy[1]) - 2, 4, 4);
         }
