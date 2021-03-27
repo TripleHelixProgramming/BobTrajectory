@@ -3,7 +3,6 @@ package com.team2363.trajectory;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.team2363.geometry.Translation2d;
 import com.team2363.motion.Constraint;
 import com.team2363.motion.DrivetrainConstraint;
 import com.team2363.motion.MotionProfile;
@@ -13,8 +12,6 @@ import com.team2363.path.PathPlanner;
 import com.team319.trajectory.RobotConfig;
 
 public class TrajectoryPlanner {
-    private static double x, y;
-
     public static Trajectory generate(List<List<Double>> waypoints) {
         Trajectory traj = new Trajectory(RobotConfig.dt);
         if (waypoints.size() < 2) return traj;
