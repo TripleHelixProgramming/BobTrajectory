@@ -21,6 +21,7 @@ public class PathPlanner {
             DraggableWaypoint w1 = waypoints.get(i + 1);
             splines[i] = new Spline(w0.getX(), w0.getY(), w0.getHeading(), w1.getX(), w1.getY(), w1.getHeading());
         }
+        Spline.optimizeSpline(splines);
         return splines;
     }
 

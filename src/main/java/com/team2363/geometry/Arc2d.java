@@ -48,7 +48,7 @@ public class Arc2d {
     }
 
     public double getCurvature() {
-        return colinear ? 0 : 1 / radius;
+        return colinear ? 0 : Math.signum(deltaRotation) / radius;
     }
 
     public Pose2d getPose(double s) {
