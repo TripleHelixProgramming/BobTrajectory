@@ -51,7 +51,7 @@ public class MotionState {
         StringBuilder data = new StringBuilder();
         data.append(df.format(distance)).append(",");
         data.append(df.format(velocity)).append(",");
-        data.append(df.format(acceleration)).append(",");
+        data.append(df.format(acceleration));
         return data.toString();
     }
 }

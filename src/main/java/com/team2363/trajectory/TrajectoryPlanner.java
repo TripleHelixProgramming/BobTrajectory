@@ -28,13 +28,13 @@ public class TrajectoryPlanner {
         MotionProfile.generate(traj, segments, constraints, path);
         assignPoses(traj, path);
         correctHeading(traj);
+        makeLeftAndRightTrajectories(traj, path);
         return traj;
     }
 
     private static void assignPoses(Trajectory traj, Path path) {
         for (TrajectoryState state : traj.getStates()) {
             state.setPose(path.getPose(state.getCenterState().getDistance()));
-            // System.out.println(state.getCenterState().getDistance());
         }
     }
 
@@ -61,37 +61,10 @@ public class TrajectoryPlanner {
 		}
     }
     
-    // public static void makeLeftAndRightTrajectories(Trajectory traj) {
-	// 	for (int i = 0; i < traj.getStates().size(); ++i) {
-	// 		TrajectoryState currentCenter = traj.getStates().get(i);
-	// 		double cos_angle = Math.cos(currentCenter.getPose().getRotation().getRadians());
-	// 		double sin_angle = Math.sin(currentCenter.getPose().getRotation().getRadians());
-
-    //         x = currentCenter.getPose().getTranslation().x() - RobotConfig.wheelBase / 2 * sin_angle;
-    //         y = currentCenter.getPose().getTranslation().x() + RobotConfig.wheelBase / 2 * cos_angle;
-    //         Translation2d leftTranslation = new Translation2d(x, y);
-
-    //         x = currentCenter.getPose().getTranslation().x() + RobotConfig.wheelBase / 2 * sin_angle;
-    //         y = currentCenter.getPose().getTranslation().x() - RobotConfig.wheelBase / 2 * cos_angle;
-    //         Translation2d rightTranslation = new Translation2d(x, y);
-	// 		if (i > 0) {
-				
-	// 		} else {
-    //             currentCenter.setLeftState(currentCenter.getCenterState());
-    //             currentCenter.setRightState(currentCenter.getCenterState());
-    //         }
-	// 	}
-	// }
-
-	// private static void calculateSegmentData(TrajectoryState current, TrajectoryState previous) {
-	// 	double distanceTravelled = Math.sqrt((current.x - previous.x)
-	// 					* (current.x - previous.x)
-	// 					+ (current.y - previous.y)
-	// 					* (current.y - previous.y));
-						
-	// 	current.pos = previous.pos + distanceTravelled;
-	// 	current.vel = distanceTravelled / current.dt;
-	// 	current.acc = (current.vel - previous.vel) / current.dt;
-	// 	current.jerk = (current.acc - previous.acc) / current.dt;
-	// }
+    public static void makeLeftAndRightTrajectories(Trajectory traj, Path path) {
+		for (TrajectoryState state : traj.getStates()) {
+            state.setLeftVelocity(state.getCenterState().getVelocity() * (1 - path.getCurvature(state.getCenterState().getDistance()) * RobotConfig.wheelBase / 2));
+            state.setRightVelocity(state.getCenterState().getVelocity() * (1 + path.getCurvature(state.getCenterState().getDistance()) * RobotConfig.wheelBase / 2));
+		}
+	}
 }

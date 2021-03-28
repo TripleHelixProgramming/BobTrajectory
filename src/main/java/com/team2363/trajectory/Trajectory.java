@@ -23,4 +23,11 @@ public class Trajectory {
     public void addState(TrajectoryState state) {
         states.add(state);
     }
+
+    public String toString() {
+        StringBuilder data = new StringBuilder();
+        data.append(dt).append("\n");
+        states.forEach(state -> data.append(state).append("\n"));
+        return data.toString();
+    }
 }

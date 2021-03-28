@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.team2363.trajectory.TrajectoryPlanner;
+
 public class FileManager {
     private static final File deployPathsDirectory = new File("src/main/java/frc/deploy/paths/");
     private static final File localPathsDirectory = new File("src/main/java/frc/local/paths/");
@@ -36,8 +38,8 @@ public class FileManager {
             File deployFile = new File(deployPathsDirectory, "paths/" + filename);
             String pathData = Files.readString(Paths.get(deployFile.getPath()));
             FileUtil.write(new File(localPathsDirectory, "paths/"), filename, pathData);
-            // String trajectoryData = TrajectoryGenerator.generate(FileUtil.parseDoubleCSV(localFile)).toString();
-            // FileUtil.write(new File(deployPathsDirectory, "trajectories/"), filename, trajectoryData);
+            String trajectoryData = TrajectoryPlanner.generate(FileUtil.parseDoubleCSV(deployFile)).toString();
+            FileUtil.write(new File(localPathsDirectory, "trajectories/"), filename, trajectoryData);
         } catch (IOException e) {
             System.out.println(e);
             System.out.println(e.getStackTrace());
@@ -52,6 +54,7 @@ public class FileManager {
             File deployFile = new File(deployPathsDirectory, "paths/" + fileName);
             if (!deployFile.exists()) {
                 new File(localPathsDirectory, "paths/" + fileName).delete();
+                new File(localPathsDirectory, "trajectories/" + fileName).delete();
             }
         }
     }

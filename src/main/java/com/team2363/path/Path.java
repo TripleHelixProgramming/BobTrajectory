@@ -52,7 +52,7 @@ public class Path {
         }
         while (currentDistance + arcs.get(arcIndex).getLength() < correctedS) {
             currentDistance += arcs.get(arcIndex).getLength();
-            arcIndex++;
+            arcIndex = Math.min(arcIndex, arcs.size() - 1);
         }
         return correctedS - currentDistance;
     }

@@ -1,5 +1,7 @@
 package com.team2363.path;
 
+import java.util.List;
+
 import com.team2363.geometry.Translation2d;
 
 public class Spline {

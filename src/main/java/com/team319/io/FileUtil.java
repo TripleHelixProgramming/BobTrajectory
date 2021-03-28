@@ -129,4 +129,28 @@ public class FileUtil {
             return null;
         }
     }
+
+    public static List<List<Double>> parseDoubleCSV(File file) {
+        if (file == null || !file.exists()) {
+            return null;
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            List<List<Double>> list = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                List<Double> newValues = new ArrayList<Double>();
+                for (String str : values) {
+                    newValues.add(Double.parseDouble(str.trim()));
+                }
+                list.add(newValues);
+            }
+            reader.close();
+            return list;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 }

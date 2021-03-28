@@ -1,11 +1,14 @@
 package com.team2363.trajectory;
 
+import java.text.DecimalFormat;
+
 import com.team2363.geometry.Pose2d;
 import com.team2363.motion.MotionState;
 
 public class TrajectoryState {
     private Pose2d pose;
-    private MotionState left, right, center;
+    private MotionState center;
+    private double left, right;
 
     public TrajectoryState(MotionState state) {
         center = state;
@@ -19,11 +22,11 @@ public class TrajectoryState {
         return pose;
     }
 
-    public void setLeftState(MotionState left) {
+    public void setLeftVelocity(double left) {
         this.left = left;
     }
 
-    public MotionState getLeftState() {
+    public double getLeftState() {
         return left;
     }
 
@@ -35,15 +38,16 @@ public class TrajectoryState {
         return center;
     }
 
-    public void setRightState(MotionState right) {
+    public void setRightVelocity(double right) {
         this.right = right;
     }
 
-    public MotionState getRightState() {
+    public double getRightState() {
         return right;
     }
 
     public String toString() {
-        return pose + "," + center;
+        DecimalFormat df = new DecimalFormat("0.0000");
+        return pose + "," + center + "," + df.format(left) + "," + df.format(right);
     }
 }
