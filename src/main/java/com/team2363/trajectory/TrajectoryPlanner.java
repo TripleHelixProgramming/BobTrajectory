@@ -3,6 +3,9 @@ package com.team2363.trajectory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.team2363.geometry.Pose2d;
+import com.team2363.geometry.Rotation2d;
+import com.team2363.geometry.Translation2d;
 import com.team2363.motion.Constraint;
 import com.team2363.motion.DrivetrainConstraint;
 import com.team2363.motion.MotionProfile;
@@ -39,11 +42,11 @@ public class TrajectoryPlanner {
     }
 
     private static void correctHeading(Trajectory trajectory) {
-		// Fix headings so they are continuously additive 
+        // Fix headings so they are continuously additive 
 		double lastUncorrectedHeading = trajectory.getStates().get(0).getPose().getRotation().getRadians();
 		double lastCorrectedHeading = lastUncorrectedHeading;
-		for (TrajectoryState state : trajectory.getStates()) {
-			double uncorrectedHeading = state.getPose().getRotation().getRadians();
+		for (int i = 1; i < trajectory.getStates().size(); i++) {
+			double uncorrectedHeading = trajectory.getStates().get(i).getPose().getRotation().getRadians();
 			double headingDelta = 0;
 			
 			if (lastUncorrectedHeading < 0 && uncorrectedHeading > 0  && lastUncorrectedHeading < -Math.PI / 2) {
@@ -54,8 +57,9 @@ public class TrajectoryPlanner {
 				headingDelta = lastUncorrectedHeading - uncorrectedHeading;
 			}
 
-			double correctedHeading = lastCorrectedHeading - headingDelta;
-			state.getPose().getRotation().setRadians(correctedHeading);
+            double correctedHeading = lastCorrectedHeading - headingDelta;
+            Translation2d translation = trajectory.getStates().get(i).getPose().getTranslation();
+			trajectory.getStates().get(i).setPose(new Pose2d(translation, new Rotation2d(correctedHeading)));
 			lastUncorrectedHeading = uncorrectedHeading;
 			lastCorrectedHeading = correctedHeading;
 		}

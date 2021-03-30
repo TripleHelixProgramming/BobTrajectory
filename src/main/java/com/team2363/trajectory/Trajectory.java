@@ -26,8 +26,12 @@ public class Trajectory {
 
     public String toString() {
         StringBuilder data = new StringBuilder();
-        data.append(dt).append("\n");
-        states.forEach(state -> data.append(state).append("\n"));
+        for (int i = 0; i < states.size(); i++) {
+            data.append(states.get(i));
+            if (i != states.size() - 1) {
+                data.append("\n");
+            }
+        }
         return data.toString();
     }
 }

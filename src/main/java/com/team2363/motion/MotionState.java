@@ -12,6 +12,7 @@ public class MotionState {
     }
 
     public MotionState interpolate(MotionState state, double t) {
+        if (velocity == 0 && state.getVelocity() == 0) return new MotionState(distance, 0, 0);
         double acc = (state.getVelocity() - velocity) / timeBetweenStates(state);
         double vel = velocity + acc * t;
         double pos = distance + velocity * t + 0.5 * acc * t * t;
@@ -19,7 +20,9 @@ public class MotionState {
     }
 
     public double timeBetweenStates(MotionState state) {
-        return Math.abs(2 * (state.getDistance() - distance) / (state.getVelocity() + velocity));
+        double time = Math.abs(2 * (state.getDistance() - distance) / (state.getVelocity() + velocity));
+        if (Double.isNaN(time)) return 0;
+        return time;
     }
 
     public void setAcceleration(double acceleration) {

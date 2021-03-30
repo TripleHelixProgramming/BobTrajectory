@@ -10,7 +10,7 @@ import com.team319.trajectory.RobotConfig;
 public class MotionProfile {
     public static void generate(Trajectory traj, List<MotionSegment> segments, List<Constraint> constraints, Path path) {
         List<MotionState> states = new ArrayList<MotionState>();
-        final double ds = 0.01;
+        final double ds = 0.1;
         double si = 0;
         double velocity, acceleration;
         for (MotionSegment segment : segments) {
@@ -48,14 +48,12 @@ public class MotionProfile {
             double vf = Math.sqrt(vi * vi + 2 * a * d);
             states.get(i).setVelocity(Math.min(vf, states.get(i).getVelocity()));
         }
-        // states.forEach(val -> System.out.println(val));
 
         double[] timestamps = new double[states.size()];
         if (timestamps.length > 1) {
             timestamps[0] = 0;
             for (int i = 1; i < timestamps.length; i++) {
                 timestamps[i] = states.get(i - 1).timeBetweenStates(states.get(i)) + timestamps[i - 1];
-                // System.out.println(timestamps[i]);
             }
             int index = 0;
             double ti = 0;

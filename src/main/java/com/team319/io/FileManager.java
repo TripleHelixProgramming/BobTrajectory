@@ -11,11 +11,12 @@ import java.util.List;
 import com.team2363.trajectory.TrajectoryPlanner;
 
 public class FileManager {
-    private static final File deployPathsDirectory = new File("src/main/java/frc/deploy/paths/");
-    private static final File localPathsDirectory = new File("src/main/java/frc/local/paths/");
+    private static final File deployPathsDirectory = new File("home/lvuser/deploy/paths/");
+    private static final File localPathsDirectory = new File("home/lvuser/local/paths/");
 
     public static void generate() {
         purgeFiles();
+        ConfigImporter.importConfig(new File(deployPathsDirectory, "config/config.csv"));
         File configDeployFile = new File(deployPathsDirectory, "config/config.csv");
         File configLocalFile = new File(localPathsDirectory, "config/config.csv");
         if (!FileUtil.compareFileContents(configDeployFile, configLocalFile)) {

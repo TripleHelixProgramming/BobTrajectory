@@ -48,6 +48,6 @@ public class TrajectoryState {
 
     public String toString() {
         DecimalFormat df = new DecimalFormat("0.0000");
-        return pose + "," + center + "," + df.format(left) + "," + df.format(right);
+        return df.format(pose.getRotation().getRadians()) + "," + df.format(center.getDistance()) + "," + df.format(left) + "," + df.format(right);
     }
 }

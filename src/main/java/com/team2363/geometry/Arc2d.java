@@ -30,12 +30,20 @@ public class Arc2d {
                 b1 = ((p0.y() + p2.y()) / 2 - m1 * (p0.x() + p2.x()) / 2);
             }
             center = new Translation2d((b1 - b0) / (m0 - m1), m0 * (b1 - b0) / (m0 - m1) + b0);
-            radius = center.getDistance(p1);
-            offsetRotation = Math.atan2(p0.y() - center.y(), p0.x() - center.x());
-            double finalRotation = Math.atan2(p2.y() - center.y(), p2.x() - center.x());
-            double diff = (finalRotation - offsetRotation - Math.PI) % (2 * Math.PI) - Math.PI;
-            deltaRotation = diff < -Math.PI ? diff + 2 * Math.PI : diff;
-            length = radius * Math.abs(deltaRotation);
+            if (center.getDistance(p1) > 1E4) {
+                colinear = true;
+                offsetRotation = Math.atan2(p2.y() - p0.y(), p2.x() - p0.x());
+                deltaRotation = 0;
+                length = p0.getDistance(p2);
+            } else {
+                radius = Math.min(1E3, center.getDistance(p1));
+                offsetRotation = Math.atan2(p0.y() - center.y(), p0.x() - center.x());
+                double finalRotation = Math.atan2(p2.y() - center.y(), p2.x() - center.x());
+                double diff = (finalRotation - offsetRotation - Math.PI) % (2 * Math.PI) - Math.PI;
+                deltaRotation = diff < -Math.PI ? diff + 2 * Math.PI : diff;
+                length = radius * Math.abs(deltaRotation);
+            }
+
         }
     }
 
@@ -45,6 +53,10 @@ public class Arc2d {
 
     public double getDeltaRotation() {
         return deltaRotation;
+    }
+
+    public double getRadius() {
+        return radius;
     }
 
     public double getCurvature() {
@@ -69,6 +81,7 @@ public class Arc2d {
 
     public Rotation2d getRotation(double s) {
         double correctedS = Math.max(0, Math.min(s, length));
+        if (colinear) return new Rotation2d(offsetRotation);
         double yComponent = deltaRotation * radius * Math.cos(offsetRotation + deltaRotation * correctedS / length);
         double xComponent = -deltaRotation * radius * Math.sin(offsetRotation + deltaRotation * correctedS / length);
         return new Rotation2d(Math.atan2(yComponent, xComponent));
