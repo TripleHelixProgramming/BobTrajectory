@@ -3,7 +3,6 @@ package com.team319.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -17,8 +16,10 @@ import java.util.List;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JFileChooser;
 
 import com.google.common.base.Strings;
@@ -28,6 +29,7 @@ import com.team319.io.PathExporter;
 import com.team319.io.PathImporter;
 import com.team319.io.TrajectoryExporter;
 import com.team319.trajectory.BobPath;
+import com.team319.trajectory.ExportType;
 import com.team319.trajectory.RobotConfig;
 
 public class BobTrajectoryApp extends JFrame {
@@ -39,7 +41,9 @@ public class BobTrajectoryApp extends JFrame {
     private static final long serialVersionUID = 1L;
 
     FieldTabs tabs = new FieldTabs();
-    JPanel buttons = new JPanel();
+    // JPanel buttons = new JPanel();
+    JMenu fileMenu = new JMenu("File");
+    JMenu pathMenu = new JMenu("Path");
 
     public BobTrajectoryApp() {
         Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
@@ -47,7 +51,7 @@ public class BobTrajectoryApp extends JFrame {
         importPaths();
         ConfigImporter.importConfig(null);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2-755/2, dim.height/2-730/2);
+        setLocation(dim.width / 2 - 755 / 2, dim.height / 2 - 730 / 2);
         setTitle("BobTrajectory");
         setVisible(true);
         addWindowListener(new SaveHandler());
@@ -55,41 +59,110 @@ public class BobTrajectoryApp extends JFrame {
         setupTabPanel();
         setResizable(false);
         setBackground(new Color(50, 50, 50));
+        setupMenuBar();
         pack();
     }
 
+    private void setupMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        // Creating File menu
+        // JMenu filMenu = new JMenu("File");
+        JMenuItem mItem1 = new JMenuItem("Open...");
+        JMenuItem mItem2 = new JMenuItem("Save As...");
+        mItem2.setEnabled(false);
+
+        // Adding menu items to the menu
+        fileMenu.add(mItem1);
+        fileMenu.add(mItem2);
+
+        // Add ActionListeners
+        mItem1.addActionListener(new OpenPath());
+        mItem2.addActionListener(new SavePath());
+
+        // Creating Path menu
+        // JMenu pathMenu = new JMenu("Path");
+        JMenuItem mItem3 = new JMenuItem("Add...");
+        JMenuItem mItem4 = new JMenuItem("Delete");
+        mItem4.setEnabled(false);
+        JMenuItem mItemClone = new JMenuItem("Clone...");
+        mItemClone.setEnabled(false);
+        JMenuItem mItem5 = new JMenuItem("Configuration...");
+        JMenuItem mItem6 = new JMenuItem("Field Background...");
+        mItem6.setEnabled(false);
+
+        // Adding menu items to the menu
+        pathMenu.add(mItem3);
+        pathMenu.add(mItem4);
+        pathMenu.add(mItemClone);
+        pathMenu.add(mItem5);
+        pathMenu.add(mItem6);
+
+        // Add ActionListeners
+        mItem3.addActionListener(new CreateNewPath());
+        mItemClone.addActionListener(new ClonePath());
+        mItem4.addActionListener(new DeletePath());
+        mItem5.addActionListener(new OpenConfiguration());
+        mItem6.addActionListener(new OpenFieldImage());
+
+        // Adding our menu to the menu bar
+        menuBar.add(fileMenu);
+        menuBar.add(pathMenu);
+
+        // Adding my menu bar to the frame by calling setMenuBar() method
+        this.setJMenuBar(menuBar);
+
+    }
+/*
     private void setupTabPanel() {
-        // setContentPane(tabs);
         getContentPane().setBackground(new Color(50, 50, 50));
-        NewPathButton newPathButton = new NewPathButton();
         newPathButton.addActionListener(new CreateNewPath());
-        // newPathButton.setBounds(0, -50, 50, 50);
-
-        DeletePathButton deletePathButton = new DeletePathButton();
         deletePathButton.addActionListener(new DeletePath());
-        // deletePathButton.setBounds(70, 635, 50, 50);
-
-        ConfigurationButton configurationButton = new ConfigurationButton();
+        copyPathButton.addActionListener(new CopyPath());
+        copyPathButton.setEnabled(tabs.getComponents() != null && tabs.getComponents().length > 0);
         configurationButton.addActionListener(new OpenConfiguration());
-        // configurationButton.setBounds(130, 635, 50, 50);
-
-        SaveButton saveButton = new SaveButton();
         saveButton.addActionListener(new SavePath());
         saveButton.setEnabled(false);
-
-        OpenButton openButton = new OpenButton();
         openButton.addActionListener(new OpenPath());
 
         buttons.setBackground(new Color(50, 50, 50));
         buttons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         buttons.add(newPathButton);
         buttons.add(deletePathButton);
+        buttons.add(copyPathButton);
         buttons.add(configurationButton);
         buttons.add(saveButton);
         buttons.add(openButton);
+>>>>>>> joshuaAN/copy_path
+*/
 
+    private void setupTabPanel() {
+        getContentPane().setBackground(new Color(50, 50, 50));
+        /*
+         * Use Menus instead of buttons. NewPathButton newPathButton = new
+         * NewPathButton(); newPathButton.addActionListener(new CreateNewPath());
+         * 
+         * DeletePathButton deletePathButton = new DeletePathButton();
+         * deletePathButton.addActionListener(new DeletePath());
+         * 
+         * ConfigurationButton configurationButton = new ConfigurationButton();
+         * configurationButton.addActionListener(new OpenConfiguration());
+         * 
+         * SaveButton saveButton = new SaveButton(); saveButton.addActionListener(new
+         * SavePath()); saveButton.setEnabled(false);
+         * 
+         * OpenButton openButton = new OpenButton(); openButton.addActionListener(new
+         * OpenPath());
+         * 
+         * buttons.setBackground(new Color(50, 50, 50));
+         * buttons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+         * buttons.add(newPathButton); buttons.add(deletePathButton);
+         * buttons.add(configurationButton); buttons.add(saveButton);
+         * buttons.add(openButton);
+         * 
+         * add(buttons, BorderLayout.SOUTH);
+         */
         add(tabs);
-        add(buttons, BorderLayout.SOUTH);
     }
 
     private void importPaths() {
@@ -99,7 +172,7 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void importPaths(File file) {
-        for (Plotter path: PathImporter.importPaths(file)) {
+        for (Plotter path : PathImporter.importPaths(file)) {
             tabs.addTab(path.getPathName(), path);
         }
     }
@@ -117,88 +190,127 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void exportPath(BobPath path, File file) {
-            PathExporter.exportPath(path, file);
-            TrajectoryExporter.exportTrajectory(path, file);
-     }
+        PathExporter.exportPath(path, file);
+        TrajectoryExporter.exportTrajectory(path, file);
+    }
 
-     private void enableSaveButton() {
-        Component c = buttons.getComponent(3); // If there's a better way to get a particular button, like find by name, that'd be better
-        if (c instanceof SaveButton) {
-            c.setEnabled(true);
-        }
-     }
+    private void enableSaveButton(boolean state) {
+        /*
+         * Component c = buttons.getComponent(3); // If there's a better way to get a
+         * particular button, like find by name, that'd be better if (c instanceof
+         * SaveButton) { c.setEnabled(true); }
+         */
+
+        Component m = fileMenu.getItem(1);
+        m.setEnabled(state);
+        m = pathMenu.getItem(1); // Delete
+        m.setEnabled(state);
+        m = pathMenu.getItem(2); // Clone 
+        m.setEnabled(state);
+        m = pathMenu.getItem(4); // Field Image
+        m.setEnabled(state);
+    }
 
     private class CreateNewPath implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path",
+                    JOptionPane.PLAIN_MESSAGE);
+            if (Strings.isNullOrEmpty(name)) {
+                return;
+            }
+            if(RobotConfig.exportType == ExportType.CLASS) {
+                name = cleanPathName(name);
+            }
+            enableSaveButton(true);
+            Plotter newPath = new Plotter(name);
+            tabs.addTab(newPath.getPathName(), newPath);
+            tabs.repaint();
+            pack();
+        }
+    }
+
+    /**
+     * Should act like a "new" path, but copies the current-active path.
+     */
+    private class ClonePath implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
             if (Strings.isNullOrEmpty(name)) {
                 return;
             }
 
-            enableSaveButton();
+            if(RobotConfig.exportType == ExportType.CLASS) {
+                name = cleanPathName(name);
+            }
+
+            Plotter currentPath = (Plotter)tabs.getSelectedComponent();
             Plotter newPath = new Plotter(name);
+
+            List<DraggableWaypoint> copywaypoints = new ArrayList<>();
+            for(DraggableWaypoint waypoint : currentPath.getPath().getWaypoints()){
+                copywaypoints.add(new DraggableWaypoint(waypoint, newPath));
+            }
+            newPath.getWaypointListener().setWaypoints(copywaypoints);
+
             tabs.addTab(newPath.getPathName(), newPath);
             tabs.repaint();
             pack();
-		}
+        }
     }
 
     private class DeletePath implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-            if (JOptionPane.showConfirmDialog (
-                null, 
-                "Are you sure you want to delete this path?",
-                "Delete Path", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.YES_OPTION) {
-                    return;
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this path?", "Delete Path",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.YES_OPTION) {
+                return;
             }
             tabs.remove(tabs.getSelectedComponent());
+
             if (0 == tabs.getTabCount()) {
-                Component c = buttons.getComponent(3);
-                if (c instanceof SaveButton) {
-                    // System.out.println("Disable SaveButton");
-                    c.setEnabled(false);
-                }    
+                enableSaveButton(false);
             }
-            pack();   
-		}
+            pack();
+        }
     }
 
     private class OpenConfiguration implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             ConfigurationPanel configuration = new ConfigurationPanel();
-            int result = JOptionPane.showConfirmDialog(null, configuration, 
-            "Configuration", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, configuration, "Configuration",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 updateConfig(configuration);
                 tabs.repaint();
-            }      
-		}
+            }
+        }
     }
 
     private class SavePath implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             JFileChooser fc = new JFileChooser();
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fc.setAcceptAllFileFilterUsed(false);
             int saveResult = fc.showSaveDialog(null);
             if (JFileChooser.APPROVE_OPTION == saveResult) {
-                Component c = tabs.getSelectedComponent();    
+                Component c = tabs.getSelectedComponent();
                 if (c instanceof Plotter) {
-                    BobPath path = ((Plotter)c).getPath();        
+                    BobPath path = ((Plotter) c).getPath();
                     /*
-                        The FileChooser SaveDialog is a bit wonky. If you create a folder, you are placed in the folder,
-                        but the selected file remains the parent folder. So if you use the selected file,
-                        you'll end up creating a new folder inside the folder you just created!
-                        
-                        Get around this by doing some finagling. IF the selected file's name is the same as its grandparent,
-                        then assume the user created a new folder and the selected file points to the folder the new folder was
-                        created in. *whew*
-                    */
+                     * The FileChooser SaveDialog is a bit wonky. If you create a folder, you are
+                     * placed in the folder, but the selected file remains the parent folder. So if
+                     * you use the selected file, you'll end up creating a new folder inside the
+                     * folder you just created!
+                     * 
+                     * Get around this by doing some finagling. IF the selected file's name is the
+                     * same as its grandparent, then assume the user created a new folder and the
+                     * selected file points to the folder the new folder was created in. *whew*
+                     */
                     File file = fc.getSelectedFile();
                     if (!file.exists()) {
                         if (file.getParentFile().getParentFile().getName().equals(file.getName())) {
@@ -208,21 +320,40 @@ public class BobTrajectoryApp extends JFrame {
                     exportPath(path, file);
                     ConfigExporter.exportConfig(file);
                 }
-            }      
-		}
+            }
+        }
     }
 
     private class OpenPath implements ActionListener {
         @Override
-		public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             JFileChooser fc = new JFileChooser();
             int openResult = fc.showOpenDialog(null);
             if (JFileChooser.APPROVE_OPTION == openResult) {
                 importPaths(fc.getSelectedFile());
-                ConfigImporter.importConfig(fc.getSelectedFile().getParentFile()); // Get the directory the Path file is in
-                enableSaveButton();
+                ConfigImporter.importConfig(fc.getSelectedFile().getParentFile()); // Get the directory the Path file is
+                                                                                   // in
+                enableSaveButton(true);
                 tabs.repaint();
-                pack();    
+                pack();
+            }
+        }
+    }
+
+    private class OpenFieldImage implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fc = new JFileChooser();
+            int openResult = fc.showOpenDialog(null);
+            if (JFileChooser.APPROVE_OPTION == openResult) {
+                File imageFile = fc.getSelectedFile();
+                Component currentTab = tabs.getSelectedComponent();
+                if (currentTab instanceof Plotter) {
+                    System.out.println(imageFile.getName());
+                    ((Plotter) currentTab).setFieldImage(imageFile);
+                }
+                tabs.repaint();
+                pack();
             }
         }
     }
@@ -239,33 +370,50 @@ public class BobTrajectoryApp extends JFrame {
     private class SaveHandler implements WindowListener {
 
         @Override
-            public void windowOpened(WindowEvent e) {}
+        public void windowOpened(WindowEvent e) {
+            // Do Nothing
+        }
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (JOptionPane.showConfirmDialog (
-                            null, 
-                            "Do you want to save the paths and config?",
-                            "Save", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION) {
-                    exportPaths();
-                    ConfigExporter.exportConfig();
-                }
-                System.exit(0);
+        @Override
+        public void windowClosing(WindowEvent e) {
+            if (JOptionPane.showConfirmDialog(null, "Do you want to save the paths and config?", "Save",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION) {
+                exportPaths();
+                ConfigExporter.exportConfig();
             }
+            System.exit(0);
+        }
 
-            @Override
-            public void windowClosed(WindowEvent e) {}
+        @Override
+        public void windowClosed(WindowEvent e) {
+            // Do Nothing
+        }
 
-            @Override
-            public void windowIconified(WindowEvent e) {}
+        @Override
+        public void windowIconified(WindowEvent e) {
+            // Do Nothing
+        }
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+            // Do Nothing
+        }
 
-            @Override
-            public void windowActivated(WindowEvent e) {}
+        @Override
+        public void windowActivated(WindowEvent e) {
+            // Do Nothing
+        }
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+            // Do Nothing
+        }
+    }
+
+    /**
+     * Removes all characters from a path which would cause a Java class-based generated path to not compile.
+     */
+    public static String cleanPathName(String path) {
+        return path.trim().replaceAll("[\\\\/:;*?\"= <>|-]", "");
     }
 }

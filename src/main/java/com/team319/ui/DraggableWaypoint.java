@@ -19,7 +19,9 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 
     static final int WAYPOINT_DIAMETER = 20;
     private static final int BUFFER_WIDTH = 10;
-    private static final Color PURPLE = new Color(148, 0, 211);
+    private static final Color PURPLE = new Color(102, 46, 145);
+    private static final Color YELLOW = new Color(253, 184, 19);
+    private static final Color BLACK = new Color(25, 25, 25);
 
     private double x;
     private double y;
@@ -37,11 +39,25 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     private Plotter parentPanel;
 
     public DraggableWaypoint(double x, double y, double heading, double currentVelocity, double maxVelocity, Plotter parentPanel) {
+        this(parentPanel);
         this.x = roundTo2(x);
         this.y = roundTo2(y);
         this.heading = heading;
         this.currentVelocity = currentVelocity;
         this.maxVelocity = maxVelocity;
+    }
+
+    public DraggableWaypoint(DraggableWaypoint copy, Plotter parentPanel) {
+        this(parentPanel);
+        this.x = copy.x;
+        this.y = copy.y;
+        this.heading = copy.heading;
+        this.currentVelocity = copy.currentVelocity;
+        this.maxVelocity = copy.maxVelocity;
+        this.parentPanel = parentPanel;
+    }
+
+    private DraggableWaypoint(Plotter parentPanel) {
         this.parentPanel = parentPanel;
         parentPanel.addMouseListener(this);
         parentPanel.addMouseMotionListener(this);
@@ -54,17 +70,17 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 
 	public boolean wasClicked(double x, double y) {
         double y1 = y;
-        double y2 = Plotter.convertYToPixel(getY());
+        double y2 = parentPanel.convertYToPixel(getY());
         double x1 = x;
-        double x2 = Plotter.convertXToPixel(getX());
+        double x2 = parentPanel.convertXToPixel(getX());
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)) < (WAYPOINT_DIAMETER + BUFFER_WIDTH) / 2;
     }
     
     public boolean wasRotatorClicked(double x, double y) {
         double y1 = y;
         double x1 = x;
-        double y2 = getTailY(Plotter.convertYToPixel(getY()));
-        double x2 = getTailX(Plotter.convertXToPixel(getX()));
+        double y2 = getTailY(parentPanel.convertYToPixel(getY()));
+        double x2 = getTailX(parentPanel.convertXToPixel(getX()));
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)) < (WAYPOINT_DIAMETER + BUFFER_WIDTH) / 2;
 	}
 
@@ -79,8 +95,8 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     }
 
     private void drawHighlight(Graphics2D gc) {
-        int x = Plotter.convertXToPixel(getX());
-        int y = Plotter.convertYToPixel(getY());
+        int x = parentPanel.convertXToPixel(getX());
+        int y = parentPanel.convertYToPixel(getY());
         if (highlighted) {
             gc.setColor(PURPLE);
             gc.fillOval(x - (WAYPOINT_DIAMETER), y - (WAYPOINT_DIAMETER), WAYPOINT_DIAMETER * 2, WAYPOINT_DIAMETER * 2);
@@ -88,29 +104,29 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     }
 
     private void drawPoint(Graphics2D gc) {
-        int x = Plotter.convertXToPixel(getX());
-        int y = Plotter.convertYToPixel(getY());
-        gc.setColor(Color.BLACK);
+        int x = parentPanel.convertXToPixel(getX());
+        int y = parentPanel.convertYToPixel(getY());
+        gc.setColor(BLACK);
         gc.fillOval(x - (WAYPOINT_DIAMETER / 2), y - (WAYPOINT_DIAMETER / 2), WAYPOINT_DIAMETER, WAYPOINT_DIAMETER);
     }
 
     private void drawTail(Graphics2D gc) {
-        int x = Plotter.convertXToPixel(getX());
-        int y = Plotter.convertYToPixel(getY());
+        int x = parentPanel.convertXToPixel(getX());
+        int y = parentPanel.convertYToPixel(getY());
         int y2 = getTailY(y);
         int x2 = getTailX(x);
-        gc.setColor(Color.BLACK);
+        gc.setColor(BLACK);
         gc.fillOval(x2 - (WAYPOINT_DIAMETER / 3), y2 - (WAYPOINT_DIAMETER / 3), (int)(WAYPOINT_DIAMETER / 1.5), (int)(WAYPOINT_DIAMETER / 1.5));
         // gc.drawLine(x, y, x2, y2);
     }
 
     private void drawRobot(Graphics2D gc) {
-        double height = Plotter.convertXToPixel(RobotConfig.width);
-	    double width = Plotter.convertXToPixel(RobotConfig.length);
-		int x = Plotter.convertXToPixel(getX());
-        int y = Plotter.convertYToPixel(getY());
+        double height = parentPanel.convertXToPixel(RobotConfig.width);
+	    double width = parentPanel.convertXToPixel(RobotConfig.length);
+		int x = parentPanel.convertXToPixel(getX());
+        int y = parentPanel.convertYToPixel(getY());
        
-        gc.setColor(Color.ORANGE);
+        gc.setColor(YELLOW);
         gc.translate(x, y);
         gc.rotate(-heading);
         gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
@@ -119,11 +135,11 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     }
 
     private int getTailX(int x) {
-        return (int)(x + Plotter.convertXToPixel(RobotConfig.length / 2) * Math.cos(-heading));
+        return (int)(x + parentPanel.convertXToPixel(RobotConfig.length / 2) * Math.cos(-heading));
     }
 
     private int getTailY(int y) {
-        return (int)(y + Plotter.convertXToPixel(RobotConfig.length / 2) * Math.sin(-heading));
+        return (int)(y + parentPanel.convertXToPixel(RobotConfig.length / 2) * Math.sin(-heading));
     }
 
     /**
@@ -267,12 +283,12 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 
         if (rotatorClicked) {
             double newHeading = Math.atan2(
-                e.getY() - Plotter.convertYToPixel(getY()), 
-                e.getX() - Plotter.convertXToPixel(getX()));
+                e.getY() - parentPanel.convertYToPixel(getY()), 
+                e.getX() - parentPanel.convertXToPixel(getX()));
             setHeading(-newHeading);
         } else {
-            x = roundTo2(Plotter.convertXFromPixel(e.getX()));
-            y = roundTo2(Plotter.convertYFromPixel(e.getY()));
+            x = roundTo2(parentPanel.convertXFromPixel(e.getX()));
+            y = roundTo2(parentPanel.convertYFromPixel(e.getY()));
             highlighted = true;
         }
         parentPanel.repaint();

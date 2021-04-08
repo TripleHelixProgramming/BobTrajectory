@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +19,30 @@ import com.team319.trajectory.BobPath;
 public class Plotter extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static String fieldImage = "/field_image.png";
+    private String fieldImage = "/2021_at_home.png";
     private BufferedImage img;
-    private static double scale;
+    private double scale;
     private int fieldHeight;
     private WaypointListener waypointListener;
     private String pathName;
+
+    private static final double FIELD_HEIGHT = 15.0;
 
     public Plotter(String pathName) {
         waypointListener = new WaypointListener(this);
         try {
             this.pathName = pathName;
             img = ImageIO.read(getClass().getResourceAsStream(fieldImage));
-            scale = img.getHeight() / 27.0;
+            scale = img.getHeight() / FIELD_HEIGHT;
             fieldHeight = img.getHeight();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Plotter(String pathName, List<DraggableWaypoint> waypoints) {
+        this(pathName);
+        waypointListener.setWaypoints(waypoints);
     }
 
     @Override
@@ -78,20 +86,20 @@ public class Plotter extends JPanel {
         }
     }
 
-    public static int convertXToPixel(double value) {
+    public int convertXToPixel(double value) {
         return (int)(value * scale);
     }
 
-    public static double convertXFromPixel(double pixel) {
+    public double convertXFromPixel(double pixel) {
         return pixel / scale;
     }
 
-    public static int convertYToPixel(double value) {
-        return (int)((13.5 - value) * scale);
+    public int convertYToPixel(double value) {
+        return (int)((FIELD_HEIGHT/2 - value) * scale);
     }
 
-    public static double convertYFromPixel(double pixel) {
-        return (27 - pixel / scale) - 13.5;
+    public double convertYFromPixel(double pixel) {
+        return (FIELD_HEIGHT - pixel / scale) - FIELD_HEIGHT/2;
     }
 
     public BobPath getPath() {
@@ -139,4 +147,15 @@ public class Plotter extends JPanel {
     public void setPathName(String pathName) {
         this.pathName = pathName;
     }
+
+    public  void setFieldImage(File fieldImageFile) {
+        try {
+            this.img = ImageIO.read(fieldImageFile);
+            this.scale = img.getHeight() / FIELD_HEIGHT;
+            this.fieldHeight = img.getHeight();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
