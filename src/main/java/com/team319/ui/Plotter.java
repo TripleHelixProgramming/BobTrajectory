@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,9 @@ import com.team319.trajectory.BobPath;
 public class Plotter extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static String fieldImage = "/2021_at_home.png";
+    private String fieldImage = "/2021_at_home.png";
     private BufferedImage img;
-    private static double scale;
+    private double scale;
     private int fieldHeight;
     private WaypointListener waypointListener;
     private String pathName;
@@ -37,6 +38,11 @@ public class Plotter extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Plotter(String pathName, List<DraggableWaypoint> waypoints) {
+        this(pathName);
+        waypointListener.setWaypoints(waypoints);
     }
 
     @Override
@@ -80,19 +86,19 @@ public class Plotter extends JPanel {
         }
     }
 
-    public static int convertXToPixel(double value) {
+    public int convertXToPixel(double value) {
         return (int)(value * scale);
     }
 
-    public static double convertXFromPixel(double pixel) {
+    public double convertXFromPixel(double pixel) {
         return pixel / scale;
     }
 
-    public static int convertYToPixel(double value) {
+    public int convertYToPixel(double value) {
         return (int)((FIELD_HEIGHT/2 - value) * scale);
     }
 
-    public static double convertYFromPixel(double pixel) {
+    public double convertYFromPixel(double pixel) {
         return (FIELD_HEIGHT - pixel / scale) - FIELD_HEIGHT/2;
     }
 
@@ -141,4 +147,15 @@ public class Plotter extends JPanel {
     public void setPathName(String pathName) {
         this.pathName = pathName;
     }
+
+    public  void setFieldImage(File fieldImageFile) {
+        try {
+            this.img = ImageIO.read(fieldImageFile);
+            this.scale = img.getHeight() / FIELD_HEIGHT;
+            this.fieldHeight = img.getHeight();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
